@@ -1,10 +1,18 @@
 <mat-toolbar class="!bg-amber-200">
-    <div class="flex justify-between items-center w-full">
-         <span>Online Book Store</span>
-  
-        <div class="right">
-            <button class="bg-green-400 p-3 rounded-2xl font-mono" type="submit" routerLink="/login">Login</button>
-        </div>
+  <div class="flex justify-between items-center w-full">
+    <div class="flex justify-items-start items-center gap-2">
+      <img src="/logo.png" alt="logo image" class="w-16 h-16 cursor-pointer" />
+      <span class="font-bold">Online Book Store</span>
     </div>
- 
+
+    <div class="right">
+      <button
+        class="bg-green-400 px-5 py-2 font-bold cursor-pointer font-mono text-2xl rounded hover:bg-green-600 transition duration-200"
+        type="submit"
+        routerLink="/login"
+      >
+        Login
+      </button>
+    </div>
+  </div>
 </mat-toolbar>

@@ -1,101 +1,111 @@
-<form class="flex flex-col items-center justify-center h-screen bg-gray-100" #SignupForm="ngForm">
-  <div class="bg-white p-8 rounded shadow-md w-96">
-    <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
-    <div class="mb-4">
-      <label for="username" class="block text-gray-700 font-semibold mb-2">Username</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        required
-        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-        placeholder="Enter username"
-        #username="ngModel"
-        [(ngModel)]="signup.username"
-        username
-      />
+<div class="flex justify-around items-center w-full h-screen bg-gray-100">
+  <div class="left">
+    <img src="/bear.png" alt="bear reading book" class="w-md" />
+  </div>
+  <div class="right">
+    <form
+      class="flex flex-col items-center justify-center h-screen bg-gray-100"
+      #SignupForm="ngForm"
+    >
+      <div class="bg-white p-8 rounded shadow-md w-96">
+        <h2 class="text-4xl font-bold mb-6 text-center text-orange-500">Register</h2>
+        <div class="mb-4">
+          <!-- <label for="username" class="block text-gray-700 font-semibold mb-2">Username</label> -->
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 bg-orange-200"
+            placeholder="Enter username"
+            #username="ngModel"
+            [(ngModel)]="signup.username"
+            username
+          />
 
-      <div>
-        <div
-          *ngIf="username.invalid && username.touched"
-          class="text-red-500 text-sm bg-red-200 mt-1 p-2"
-        >
-          <div *ngIf="username.errors?.['required']">Username is required.</div>
-        </div>
-      </div>
-    </div>
-    <div class="mb-4">
-      <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        required
-        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-        placeholder="Enter email"
-        #email="ngModel"
-        [(ngModel)]="signup.email"
-        email
-      />
-      <div>
-        <div
-          *ngIf="email.invalid && email.touched"
-          class="text-red-500 text-sm bg-red-200 mt-1 p-2"
-        >
-          <div *ngIf="email.errors?.['required']">Email is required.</div>
-          <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
-        </div>
-      </div>
-    </div>
-    <div class="mb-6">
-      <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-        placeholder="Enter password"
-        #password="ngModel"
-        [(ngModel)]="signup.password"
-        minlength="6"
-        password
-      />
-      <div>
-        <div
-          *ngIf="password.invalid && password.touched"
-          class="text-red-500 text-sm bg-red-200 mt-1 p-2"
-        >
-          <div *ngIf="password.errors?.['required']">Password is required.</div>
-          <div *ngIf="password.errors?.['minlength']">
-            Password must be at least 6 characters long.
+          <div>
+            <div
+              *ngIf="username.invalid && username.touched"
+              class="text-red-500 text-sm bg-red-200 mt-1 p-2"
+            >
+              <div *ngIf="username.errors?.['required']">Username is required.</div>
+            </div>
           </div>
         </div>
+        <div class="mb-4">
+          <!-- <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label> -->
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 bg-orange-200"
+            placeholder="Enter email"
+            #email="ngModel"
+            [(ngModel)]="signup.email"
+            email
+          />
+          <div>
+            <div
+              *ngIf="email.invalid && email.touched"
+              class="text-red-500 text-sm bg-red-200 mt-1 p-2"
+            >
+              <div *ngIf="email.errors?.['required']">Email is required.</div>
+              <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-6">
+          <!-- <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label> -->
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 bg-orange-200"
+            placeholder="Enter password"
+            #password="ngModel"
+            [(ngModel)]="signup.password"
+            minlength="6"
+            password
+          />
+          <div>
+            <div
+              *ngIf="password.invalid && password.touched"
+              class="text-red-500 text-sm bg-red-200 mt-1 p-2"
+            >
+              <div *ngIf="password.errors?.['required']">Password is required.</div>
+              <div *ngIf="password.errors?.['minlength']">
+                Password must be at least 6 characters long.
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          [disabled]="SignupForm.invalid"
+          [ngClass]="{ 'btn-disable': SignupForm.invalid }"
+          type="submit"
+          class="w-full bg-yellow-500 text-black font-mono text-2xl py-2 px-4 rounded hover:bg-yellow-600 transition duration-200"
+        >
+          Register
+        </button>
+        <span class="block text-center text-gray-500 text-2xl">or</span>
+        <button
+          type="button"
+          class="cursor-pointer w-full bg-white-500 border border-gray-300 text-green-800 font-mono text-2xl py-2 rounded hover:bg-green-300 transition duration-200 mt-2"
+        >
+          <i class="bx bxl-google bx-tada"></i>connect with Google
+        </button>
+        <button
+          type="button"
+          class="cursor-pointer w-full bg-white-500 border border-gray-300 text-blue-800 font-mono text-2xl py-2 rounded hover:bg-blue-300 transition duration-200 mt-2"
+        >
+          <i class="bx bxl-facebook-circle bx-tada"></i>connect with Facebook
+        </button>
+        <h3 class="text-gray-600 mt-4">
+          Already have an account? <a href="/login" class="text-blue-500 hover:underline">Login</a>
+        </h3>
       </div>
-    </div>
-    <button
-      [disabled]="SignupForm.invalid"
-      [ngClass]="{ 'btn-disable': SignupForm.invalid }"
-      type="submit"
-      class="w-full bg-yellow-500 text-black font-mono text-2xl py-2 px-4 rounded hover:bg-yellow-600 transition duration-200"
-    >
-      Register
-    </button>
-    <span class="block text-center text-gray-500 text-2xl">or</span>
-    <button
-      type="button"
-      class="cursor-pointer w-full bg-white-500 border border-gray-300 text-green-800 font-mono text-2xl py-2 rounded hover:bg-green-300 transition duration-200 mt-2"
-    >
-      <i class="bx bxl-google bx-tada"></i>connect with Google
-    </button>
-    <button
-      type="button"
-      class="cursor-pointer w-full bg-white-500 border border-gray-300 text-blue-800 font-mono text-2xl py-2 rounded hover:bg-blue-300 transition duration-200 mt-2"
-    >
-      <i class="bx bxl-facebook-circle bx-tada"></i>connect with Facebook
-    </button>
-    <h3 class="text-gray-600 mt-4">
-      Already have an account? <a href="/login" class="text-blue-500 hover:underline">Login</a>
-    </h3>
+    </form>
   </div>
-</form>
+</div>
