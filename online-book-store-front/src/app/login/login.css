@@ -1,0 +1,5 @@
+.btn-disable{
+     background-color: #cccc !important;
+     color: #666666 !important;
+     cursor: not-allowed;
+}
