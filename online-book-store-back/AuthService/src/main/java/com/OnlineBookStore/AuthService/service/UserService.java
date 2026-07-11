@@ -1,5 +1,6 @@
 package com.OnlineBookStore.AuthService.service;
 
+import com.OnlineBookStore.AuthService.dto.SignupRequest;
 import com.OnlineBookStore.AuthService.entity.User;
 import com.OnlineBookStore.AuthService.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,13 @@ public class UserService {
     private UserRepo  userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public User registerNewUser(SignupRequest signupRequest) {
+        if(!userRepo.existsById(signupRequest.getEmail())) {
+            return userRepo.save(new User(signupRequest.getEmail(),signupRequest.getUsername(),passwordEncoder.encode(signupRequest.getPassword()) ,"User"));
+        }
+        return null;
+    }
 
     public void initRoleAndUser(){
         try{

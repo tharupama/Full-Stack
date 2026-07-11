@@ -4,14 +4,39 @@
       <img src="/logo.png" alt="logo image" class="w-16 h-16 cursor-pointer" />
       <span class="font-bold">Online Book Store</span>
     </div>
-
+    <span class="adminPanel" *ngIf="isLoggedIn() && getRole() == 'Admin'">
+      <button
+        class="bg-blue-500 px-5 py-2 font-bold cursor-pointer font-mono text-2xl rounded hover:bg-blue-600 transition duration-200"
+        type="submit"
+        routerLink="/admin"
+      >
+        Admin Panel
+      </button>
+    </span>
     <div class="right">
       <button
         class="bg-green-400 px-5 py-2 font-bold cursor-pointer font-mono text-2xl rounded hover:bg-green-600 transition duration-200"
         type="submit"
         routerLink="/login"
+        *ngIf="!isLoggedIn()"
       >
         Login
+      </button>
+      <button
+        *ngIf="isLoggedIn()"
+        class="mr-4 text-3xl cursor-pointer bg-amber-50 px-2 py-1 rounded-4xl border-2 hover:bg-amber-100 transition duration-200"
+      >
+        <i class="bx bx-user bx-bounce"></i>
+        <span class="text-lg font-bold ml-2">{{ getUsername() }}</span>
+      </button>
+
+      <button
+        class="bg-red-400 px-5 py-2 font-bold cursor-pointer font-mono text-2xl rounded hover:bg-red-600 transition duration-200"
+        type="submit"
+        (click)="clear()"
+        *ngIf="isLoggedIn()"
+      >
+        Logout
       </button>
     </div>
   </div>

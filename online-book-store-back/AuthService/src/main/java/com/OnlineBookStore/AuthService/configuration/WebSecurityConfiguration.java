@@ -36,6 +36,7 @@ public class WebSecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/signup").permitAll()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form.disable())
