@@ -37,6 +37,9 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/signup").permitAll()
+                        .requestMatchers("/message").permitAll()
+                        .requestMatchers("/actuator/busrefresh").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
