@@ -1,1 +1,202 @@
-<p>admin works!</p>
+<div class="mt-10">
+  <form #bookForm="ngForm" (ngSubmit)="addBook()">
+    <div class="flex flex-row form justify-around gap-10">
+      <div class="flex flex-col form-left w-1/2 ml-10 gap-2">
+        <table class="w-full border-collapse">
+          <tbody>
+            <tr class="h-12">
+              <td><label for="book-title" class="text-2xl font-bold">Book Title</label></td>
+              <td>
+                <label for="book-title" class="text-2xl font-bold"
+                  ><input
+                    name="title"
+                    #title="ngModel"
+                    [(ngModel)]="bookDto.title"
+                    type="text"
+                    id="book-title"
+                    placeholder="Book Title"
+                    class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                /></label>
+              </td>
+            </tr>
+
+            <tr class="h-12">
+              <td>
+                <label for="book-image" class="text-2xl font-bold">Book Image</label>
+              </td>
+              <td>
+                <input
+                  name="imgUrl"
+                  #imgUrl="ngModel"
+                  [(ngModel)]="bookDto.imgUrl"
+                  type="text"
+                  placeholder="Image url"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                />
+              </td>
+            </tr>
+            <tr class="h-12">
+              <td><label for="book-image" class="text-2xl font-bold">Category</label></td>
+              <td>
+                <select
+                  name="category"
+                  #category="ngModel"
+                  [(ngModel)]="bookDto.category"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                >
+                  <option value="science-fiction">Science Fiction</option>
+                  <option value="mystery">Mystery</option>
+                  <option value="biography">Biography</option>
+                  <option value="science">Science</option>
+                  <option value="history">History</option>
+                  <option value="romance">Romance</option>
+                </select>
+              </td>
+            </tr>
+            <tr class="h-12">
+              <td>
+                <label for="book-image" class="text-2xl font-bold">Author</label>
+              </td>
+              <td>
+                <input
+                  name="author"
+                  type="text"
+                  placeholder="Author"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                  #author="ngModel"
+                  [(ngModel)]="bookDto.author"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex flex-col w-1/2 form-right mr-10 gap-2">
+        <table class="w-full border-collapse">
+          <tbody>
+            <tr class="h-12">
+              <td>
+                <label for="description" class="text-2xl font-bold">Description</label>
+              </td>
+              <td>
+                <textarea
+                  name="description"
+                  placeholder="Description"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                  #description="ngModel"
+                  [(ngModel)]="bookDto.description"
+                ></textarea>
+              </td>
+            </tr>
+            <tr class="h-12">
+              <td>
+                <label for="price" class="text-2xl font-bold">Price</label>
+              </td>
+              <td>
+                <input
+                  name="price"
+                  #price="ngModel"
+                  [(ngModel)]="bookDto.price"
+                  type="text"
+                  placeholder="Price"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                />
+              </td>
+            </tr>
+            <tr class="h-12">
+              <td>
+                <label for="stock" class="text-2xl font-bold">Stock</label>
+              </td>
+              <td>
+                <input
+                  name="stock"
+                  #stock="ngModel"
+                  [(ngModel)]="bookDto.stock"
+                  type="text"
+                  placeholder="Stock"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="availability" class="text-2xl font-bold">Availability</label>
+              </td>
+              <td>
+                <select
+                  name="availability"
+                  #availability="ngModel"
+                  [(ngModel)]="bookDto.isAvailable"
+                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
+                >
+                  <option value="true">Available</option>
+                  <option value="false">Unavailable</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="ml-10 buttonsection">
+      <button
+        type="submit"
+        class="bg-green-500 cursor-pointer px-4 py-2 text-2xl rounded font-mono font-bold"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="books-grid">
+  <article class="book-card" *ngFor="let book of books">
+    <div class="book-card-inner">
+      <div class="book-face book-front">
+        <div class="book-art">
+          <img [src]="book.image" [alt]="book.title" />
+        </div>
+        <div class="book-front-copy">
+          <h3>{{ book.title }}</h3>
+          <p>{{ book.price }}</p>
+        </div>
+      </div>
+
+      <div class="book-face book-back">
+        <span class="back-label">About this book</span>
+        <h3>{{ book.title }}</h3>
+        <p>{{ book.description }}</p>
+        <div class="book-actions">
+          <!--           <button>Add to Cart</button>
+          <button class="buy-now">Buy Now</button> -->
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+<div
+  class="books-header"
+  style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0"
+>
+  <div class="ml-10 text-red-600 font-bold">Total books: {{ totalBooks }}</div>
+  <div class="pagination-controls gap-4 flex items-center mb-10 mr-10">
+    <button
+      (click)="prevPage()"
+      [disabled]="currentPage <= 0"
+      [ngClass]="currentPage <= 0 ? 'btn-disable' : ''"
+      class="bg-blue-400 px-4 py-2 rounder font-bold"
+    >
+      << Previous
+    </button>
+    <span>Page {{ currentPage + 1 }}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="(currentPage + 1) * pageSize >= totalBooks"
+      [ngClass]="(currentPage + 1) * pageSize >= totalBooks ? 'btn-disable' : ''"
+      class="bg-blue-400 px-4 py-2 rounder font-bold"
+    >
+      Next >>>
+    </button>
+  </div>
+</div>

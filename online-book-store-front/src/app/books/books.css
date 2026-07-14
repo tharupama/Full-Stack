@@ -193,8 +193,3 @@ h3{
 		height: 26rem;
 	}
 }
-.btn-disable{
-     background-color: #cccc !important;
-     color: #666666 !important;
-     cursor: not-allowed;
-}

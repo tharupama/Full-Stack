@@ -1,0 +1,44 @@
+package com.online_book_store.book_service.controller;
+
+import com.online_book_store.book_service.Util.StandardResponse;
+import com.online_book_store.book_service.dto.request.BookSaveRequestDto;
+import com.online_book_store.book_service.dto.respond.BookPaginatedResponseDto;
+import com.online_book_store.book_service.entity.Book;
+import com.online_book_store.book_service.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("api/v1/book-controller")
+@CrossOrigin(origins = "http://localhost:4200")
+public class BookController {
+    @Autowired
+    BookService bookService;
+
+    @PostMapping("/save")
+    public ResponseEntity<StandardResponse> save(@RequestBody BookSaveRequestDto book) {
+        String returnMsg = bookService.bookSave(book);
+        return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success",returnMsg), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<StandardResponse> update(@RequestBody Book book) {
+        String returnMsg = bookService.bookUpdate(book);
+        return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success",returnMsg), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<StandardResponse> delete(@PathVariable Long id) {
+        String msg = bookService.deleteBook(id);
+        return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success", "Book deleted successfully"), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get-by-page",params = {"page","size"})
+    public ResponseEntity<StandardResponse> getByPage(@RequestParam int page, @RequestParam int size) {
+        BookPaginatedResponseDto bookPaginatedResponseDto = bookService.getBooksByPage(page, size);
+        return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success", bookPaginatedResponseDto), HttpStatus.OK);
+    }
+}
