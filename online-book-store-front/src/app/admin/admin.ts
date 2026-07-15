@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BookService } from '../service/book-service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin',
@@ -64,6 +65,7 @@ export class Admin implements OnInit {
         const payload = res?.data ?? res;
         const books = payload?.books ?? [];
         this.books = books.map((b: any) => ({
+          id: b.id,
           title: b.title,
           image: b.imgUrl,
           price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
@@ -92,5 +94,30 @@ export class Admin implements OnInit {
     if (this.currentPage < maxPage) {
       this.loadBooks(this.currentPage + 1, this.pageSize);
     }
+  }
+  deleteBook(bookId: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.bookService.deleteBook(bookId).subscribe(
+          (response) => {
+            console.log('Book deleted:', response);
+            this.toastr.success('Book deleted successfully!');
+            this.loadBooks(this.currentPage, this.pageSize); // Reload books after deletion
+          },
+          (error) => {
+            console.error('Error deleting book:', error);
+            this.toastr.error('Error deleting book.');
+          }
+        );
+      }
+    });
   }
 }

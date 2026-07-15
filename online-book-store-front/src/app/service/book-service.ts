@@ -10,17 +10,22 @@ import { Observable } from 'rxjs/internal/Observable';
 export class BookService {
   BASE_URL = 'http://localhost:8081';
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
+  requestHeaderWithAuth = new HttpHeaders({ 'No-Auth': 'False' });
   constructor(private httpClient: HttpClient) {}
 
   public saveBook(bookData: BookDto): Observable<BookDto> {
     console.log('Saving book:', bookData);
     return this.httpClient.post<BookDto>(this.BASE_URL + '/api/v1/book-controller/save', bookData, {
-      headers: this.requestHeader,
+      headers: this.requestHeaderWithAuth,
     });
   }
 
   public getBooksByPage(page: number, size: number): Observable<any> {
     const url = `${this.BASE_URL}/api/v1/book-controller/get-by-page?page=${page}&size=${size}`;
-    return this.httpClient.get<any>(url, { headers: this.requestHeader });
+    return this.httpClient.get<any>(url, { headers: this.requestHeaderWithAuth });
+  }
+  public deleteBook(bookId: number): Observable<any> {
+    const url = `${this.BASE_URL}/api/v1/book-controller/delete/${bookId}`;
+    return this.httpClient.delete<any>(url, { headers: this.requestHeaderWithAuth });
   }
 }

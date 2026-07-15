@@ -139,10 +139,10 @@
         </table>
       </div>
     </div>
-    <div class="ml-10 buttonsection">
+    <div class="m-10 buttonsection gap-10 flex">
       <button
         type="submit"
-        class="bg-green-500 cursor-pointer px-4 py-2 text-2xl rounded font-mono font-bold"
+        class="bg-green-500 cursor-pointer px-4 py-2 text-2xl rounded font-mono font-bold hover:bg-green-600"
       >
         Save
       </button>
@@ -168,6 +168,8 @@
         <h3>{{ book.title }}</h3>
         <p>{{ book.description }}</p>
         <div class="book-actions">
+          <button type="submit">Update</button>
+          <button (click)="deleteBook(book.id)">Delete</button>
           <!--           <button>Add to Cart</button>
           <button class="buy-now">Buy Now</button> -->
         </div>
