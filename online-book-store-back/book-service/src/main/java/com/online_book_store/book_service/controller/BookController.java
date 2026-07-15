@@ -41,4 +41,9 @@ public class BookController {
         BookPaginatedResponseDto bookPaginatedResponseDto = bookService.getBooksByPage(page, size);
         return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success", bookPaginatedResponseDto), HttpStatus.OK);
     }
+    @GetMapping(value = "/get-by-page-and-title",params = {"title","page","size"})
+    public ResponseEntity<StandardResponse> getByPage(@RequestParam String title,@RequestParam int page, @RequestParam int size) {
+        BookPaginatedResponseDto bookPaginatedResponseDto = bookService.getBooksByPageAndTitle(title,page,size);
+        return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success", bookPaginatedResponseDto), HttpStatus.OK);
+    }
 }

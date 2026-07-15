@@ -53,4 +53,12 @@ public class BookServiceImpl implements BookService {
         BookPaginatedResponseDto bookPaginatedResponseDto = new BookPaginatedResponseDto(bookMapper.pageBookListToListBook(bookPage), bookRepository.count());
         return bookPaginatedResponseDto;
     }
+
+    @Override
+    public BookPaginatedResponseDto getBooksByPageAndTitle(String title,int page, int size) {
+
+        Page<Book> bookPage = bookRepository.findAllByTitleContaining(title,PageRequest.of(page, size));
+        BookPaginatedResponseDto bookPaginatedResponseDto = new BookPaginatedResponseDto(bookMapper.pageBookListToListBook(bookPage), bookRepository.count());
+        return bookPaginatedResponseDto;
+    }
 }

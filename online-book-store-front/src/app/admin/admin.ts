@@ -5,14 +5,18 @@ import { CommonModule } from '@angular/common';
 import { BookService } from '../service/book-service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { BookUpdateModal } from '../book-update-modal/book-update-modal';
+import { MatDialog } from '@angular/material/dialog';
+import { BookUpdateDto } from '../../dto/BookUpdateDto';
 
 @Component({
   selector: 'app-admin',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, BookUpdateModal],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })
 export class Admin implements OnInit {
+  searchTerm: string = '';
   bookDto: BookDto = {
     title: '',
     imgUrl: '',
@@ -30,10 +34,41 @@ export class Admin implements OnInit {
   constructor(
     private bookService: BookService,
     private toastr: ToastrService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
   ngOnInit(): void {
     this.loadBooks(this.currentPage, this.pageSize);
+  }
+  searchBooks() {
+    if (this.searchTerm.trim() === '') {
+      this.loadBooks(this.currentPage, this.pageSize);
+    } else {
+      this.bookService.searchBooks(this.searchTerm, this.currentPage, this.pageSize).subscribe(
+        (res) => {
+          const payload = res?.data ?? res;
+          const books = payload?.books ?? [];
+          this.books = books.map((b: any) => ({
+            id: b.id,
+            title: b.title,
+            image: b.imgUrl,
+            category: b.category,
+            author: b.author,
+            description: b.description,
+            price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
+            stock: b.stock,
+            isAvailable: b.isAvailable,
+          }));
+          this.totalBooks = payload?.totalBookCount ?? 0;
+          this.currentPage = this.searchTerm ? 0 : this.currentPage;
+          this.cdr.markForCheck();
+        },
+        (err) => {
+          console.error('Error searching books:', err);
+          this.toastr.error('Error searching books.');
+        }
+      );
+    }
   }
   addBook() {
     this.bookService.saveBook(this.bookDto).subscribe(
@@ -68,8 +103,12 @@ export class Admin implements OnInit {
           id: b.id,
           title: b.title,
           image: b.imgUrl,
-          price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
+          category: b.category,
+          author: b.author,
           description: b.description,
+          price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
+          stock: b.stock,
+          isAvailable: b.isAvailable,
         }));
         this.totalBooks = payload?.totalBookCount ?? 0;
         this.currentPage = page;
@@ -81,6 +120,42 @@ export class Admin implements OnInit {
         this.toastr.error('Error loading books.');
       }
     );
+  }
+  updateBook(book: any) {
+    const modalData: BookUpdateDto = {
+      id: book.id,
+      title: book.title,
+      imgUrl: book.image, // Backend expects 'imgUrl'
+      category: book.category,
+      author: book.author,
+      description: book.description,
+      price: parseFloat(book.price.toString().replace('$', '')),
+      stock: book.stock,
+      isAvailable: book.isAvailable,
+    };
+
+    const dialogRef = this.dialog.open(BookUpdateModal, {
+      width: '500px',
+      data: modalData,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Payload being sent to Spring Boot:', result);
+
+        this.bookService.updateBook(result).subscribe(
+          (response) => {
+            console.log('Book updated:', response);
+            this.toastr.success('Book updated successfully!');
+            this.loadBooks(this.currentPage, this.pageSize);
+          },
+          (error) => {
+            console.error('Error updating book:', error);
+            this.toastr.error('Error updating book.');
+          }
+        );
+      }
+    });
   }
 
   prevPage() {

@@ -148,6 +148,14 @@
       </button>
     </div>
   </form>
+  <div class="search-bar flex flex-column">
+    <div class="flex flex-row">
+      <input type="text" placeholder="Search for books..." [(ngModel)]="searchTerm" />
+    </div>
+    <div>
+      <button (click)="searchBooks()">Search</button>
+    </div>
+  </div>
 </div>
 
 <div class="books-grid">
@@ -159,6 +167,12 @@
         </div>
         <div class="book-front-copy">
           <h3>{{ book.title }}</h3>
+          <span
+            class="text-lg font-bold"
+            [ngClass]="book.isAvailable ? 'text-green-500' : 'text-red-500'"
+          >
+            {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
+          </span>
           <p>{{ book.price }}</p>
         </div>
       </div>
@@ -167,8 +181,11 @@
         <span class="back-label">About this book</span>
         <h3>{{ book.title }}</h3>
         <p>{{ book.description }}</p>
+        <p>Author : {{ book.author }}</p>
+        <p>Category : {{ book.category }}</p>
+        <p>Stock : {{ book.stock }}</p>
         <div class="book-actions">
-          <button type="submit">Update</button>
+          <button (click)="updateBook(book)">Update</button>
           <button (click)="deleteBook(book.id)">Delete</button>
           <!--           <button>Add to Cart</button>
           <button class="buy-now">Buy Now</button> -->

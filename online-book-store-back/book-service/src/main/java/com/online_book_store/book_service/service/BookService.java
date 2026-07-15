@@ -12,4 +12,6 @@ public interface BookService{
     String deleteBook(Long id);
 
     BookPaginatedResponseDto getBooksByPage(int page, int size);
+
+    BookPaginatedResponseDto getBooksByPageAndTitle(String title,int page, int size);
 }
