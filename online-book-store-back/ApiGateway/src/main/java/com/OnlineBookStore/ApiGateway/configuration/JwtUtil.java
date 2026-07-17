@@ -1,4 +1,4 @@
-package com.OnlineBookStore.AuthService.util; // Adjust package for Gateway
+package com.OnlineBookStore.ApiGateway.configuration; // Adjust package for Gateway
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,12 +42,13 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    // KEEP THIS for Auth Service (when generating tokens at login) in future if i created protected end point to this service
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String usernameFromToken = getUsernameFromToken(token);
-        return usernameFromToken.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
 
+    // 🆕 ADD THIS NEW METHOD for API Gateway (no database needed!)
+    public boolean validateTokenOnly(String token) {
+        return !isTokenExpired(token);
+        // The signature is already verified when we call getAllClaimsFromToken()
+        // If the signature is invalid, it throws an exception before reaching here
+    }
 
     private boolean isTokenExpired(String token) {
         final Claims claims = getAllClaimsFromToken(token);
@@ -55,21 +56,4 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-
-        // Embed roles directly in the token
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-        claims.put("roles", roles);
-
-        return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
-                .signWith(getSigningKey())
-                .compact();
-    }
 }

@@ -39,6 +39,13 @@ public class WebSecurityConfiguration {
                         .requestMatchers("/signup").permitAll()
                         .requestMatchers("/message").permitAll()
                         .requestMatchers("/actuator/busrefresh").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )

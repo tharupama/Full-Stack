@@ -1,150 +1,150 @@
-<div class="mt-10">
-  <form #bookForm="ngForm" (ngSubmit)="addBook()">
-    <div class="flex flex-row form justify-around gap-10">
-      <div class="flex flex-col form-left w-1/2 ml-10 gap-2">
-        <table class="w-full border-collapse">
-          <tbody>
-            <tr class="h-12">
-              <td><label for="book-title" class="text-2xl font-bold">Book Title</label></td>
-              <td>
-                <label for="book-title" class="text-2xl font-bold"
-                  ><input
-                    name="title"
-                    #title="ngModel"
-                    [(ngModel)]="bookDto.title"
-                    type="text"
-                    id="book-title"
-                    placeholder="Book Title"
-                    class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                /></label>
-              </td>
-            </tr>
+<div class="books-page">
+  <form
+    #bookForm="ngForm"
+    (ngSubmit)="addBook()"
+    class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8 my-8"
+  >
+    <!-- Form Header -->
+    <div class="mb-8 border-b pb-4">
+      <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <mat-icon class="text-indigo-600 !text-3xl">library_add</mat-icon>
+        Add New Book
+      </h2>
+      <p class="text-gray-500 mt-1">Fill in the details to add a new book to the inventory.</p>
+    </div>
 
-            <tr class="h-12">
-              <td>
-                <label for="book-image" class="text-2xl font-bold">Book Image</label>
-              </td>
-              <td>
-                <input
-                  name="imgUrl"
-                  #imgUrl="ngModel"
-                  [(ngModel)]="bookDto.imgUrl"
-                  type="text"
-                  placeholder="Image url"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                />
-              </td>
-            </tr>
-            <tr class="h-12">
-              <td><label for="book-image" class="text-2xl font-bold">Category</label></td>
-              <td>
-                <select
-                  name="category"
-                  #category="ngModel"
-                  [(ngModel)]="bookDto.category"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                >
-                  <option value="science-fiction">Science Fiction</option>
-                  <option value="mystery">Mystery</option>
-                  <option value="biography">Biography</option>
-                  <option value="science">Science</option>
-                  <option value="history">History</option>
-                  <option value="romance">Romance</option>
-                </select>
-              </td>
-            </tr>
-            <tr class="h-12">
-              <td>
-                <label for="book-image" class="text-2xl font-bold">Author</label>
-              </td>
-              <td>
-                <input
-                  name="author"
-                  type="text"
-                  placeholder="Author"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                  #author="ngModel"
-                  [(ngModel)]="bookDto.author"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Two-Column Responsive Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+      <!-- LEFT COLUMN -->
+      <div class="flex flex-col gap-2">
+        <!-- Title -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Book Title</mat-label>
+          <input
+            matInput
+            name="title"
+            #title="ngModel"
+            [(ngModel)]="bookDto.title"
+            placeholder="Enter book title"
+            required
+          />
+          <mat-icon matSuffix>menu_book</mat-icon>
+          <mat-error *ngIf="title.invalid && title.touched">Title is required</mat-error>
+        </mat-form-field>
+
+        <!-- Image URL -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Image URL</mat-label>
+          <input
+            matInput
+            name="imgUrl"
+            #imgUrl="ngModel"
+            [(ngModel)]="bookDto.imgUrl"
+            placeholder="Enter image URL"
+          />
+          <mat-icon matSuffix>image</mat-icon>
+        </mat-form-field>
+
+        <!-- Category -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Category</mat-label>
+          <mat-select name="category" #category="ngModel" [(ngModel)]="bookDto.category">
+            <mat-option value="science-fiction">Science Fiction</mat-option>
+            <mat-option value="mystery">Mystery</mat-option>
+            <mat-option value="biography">Biography</mat-option>
+            <mat-option value="science">Science</mat-option>
+            <mat-option value="history">History</mat-option>
+            <mat-option value="romance">Romance</mat-option>
+          </mat-select>
+          <mat-icon matSuffix>category</mat-icon>
+        </mat-form-field>
+
+        <!-- Author -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Author</mat-label>
+          <input
+            matInput
+            name="author"
+            #author="ngModel"
+            [(ngModel)]="bookDto.author"
+            placeholder="Enter author name"
+          />
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
       </div>
 
-      <div class="flex flex-col w-1/2 form-right mr-10 gap-2">
-        <table class="w-full border-collapse">
-          <tbody>
-            <tr class="h-12">
-              <td>
-                <label for="description" class="text-2xl font-bold">Description</label>
-              </td>
-              <td>
-                <textarea
-                  name="description"
-                  placeholder="Description"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                  #description="ngModel"
-                  [(ngModel)]="bookDto.description"
-                ></textarea>
-              </td>
-            </tr>
-            <tr class="h-12">
-              <td>
-                <label for="price" class="text-2xl font-bold">Price</label>
-              </td>
-              <td>
-                <input
-                  name="price"
-                  #price="ngModel"
-                  [(ngModel)]="bookDto.price"
-                  type="text"
-                  placeholder="Price"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                />
-              </td>
-            </tr>
-            <tr class="h-12">
-              <td>
-                <label for="stock" class="text-2xl font-bold">Stock</label>
-              </td>
-              <td>
-                <input
-                  name="stock"
-                  #stock="ngModel"
-                  [(ngModel)]="bookDto.stock"
-                  type="text"
-                  placeholder="Stock"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="availability" class="text-2xl font-bold">Availability</label>
-              </td>
-              <td>
-                <select
-                  name="availability"
-                  #availability="ngModel"
-                  [(ngModel)]="bookDto.isAvailable"
-                  class="bg-amber-200 border-2 border-gray-500 text-2xl rounded focus:border-orange-600"
-                >
-                  <option value="true">Available</option>
-                  <option value="false">Unavailable</option>
-                </select>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- RIGHT COLUMN -->
+      <div class="flex flex-col gap-2">
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            name="description"
+            #description="ngModel"
+            [(ngModel)]="bookDto.description"
+            placeholder="Enter book description"
+            rows="4"
+          ></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- Price -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Price</mat-label>
+          <input
+            matInput
+            name="price"
+            #price="ngModel"
+            [(ngModel)]="bookDto.price"
+            type="number"
+            placeholder="0.00"
+            min="0"
+            required
+          />
+          <mat-icon matSuffix>attach_money</mat-icon>
+          <mat-error *ngIf="price.invalid && price.touched">Valid price is required</mat-error>
+        </mat-form-field>
+
+        <!-- Stock -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Stock</mat-label>
+          <input
+            matInput
+            name="stock"
+            #stock="ngModel"
+            [(ngModel)]="bookDto.stock"
+            type="number"
+            placeholder="0"
+            min="0"
+            required
+          />
+          <mat-icon matSuffix>inventory_2</mat-icon>
+          <mat-error *ngIf="stock.invalid && stock.touched">Valid stock is required</mat-error>
+        </mat-form-field>
+
+        <!-- Availability -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Availability</mat-label>
+          <mat-select name="availability" #availability="ngModel" [(ngModel)]="bookDto.isAvailable">
+            <mat-option [value]="true">Available</mat-option>
+            <mat-option [value]="false">Unavailable</mat-option>
+          </mat-select>
+          <mat-icon matSuffix>check_circle</mat-icon>
+        </mat-form-field>
       </div>
     </div>
-    <div class="m-10 buttonsection gap-10 flex">
+
+    <!-- Submit Action -->
+    <div class="flex justify-end mt-8 pt-6 border-t">
       <button
+        mat-raised-button
+        color="primary"
         type="submit"
-        class="bg-green-500 cursor-pointer px-4 py-2 text-2xl rounded font-mono font-bold hover:bg-green-600"
+        class="!px-8 !py-3 text-lg font-semibold shadow-lg"
       >
-        Save
+        <mat-icon>save</mat-icon>
+        Save Book
       </button>
     </div>
   </form>
@@ -156,66 +156,66 @@
       <button (click)="searchBooks()">Search</button>
     </div>
   </div>
-</div>
 
-<div class="books-grid">
-  <article class="book-card" *ngFor="let book of books">
-    <div class="book-card-inner">
-      <div class="book-face book-front">
-        <div class="book-art">
-          <img [src]="book.image" [alt]="book.title" />
+  <div class="books-grid">
+    <article class="book-card" *ngFor="let book of books">
+      <div class="book-card-inner">
+        <div class="book-face book-front">
+          <div class="book-art">
+            <img [src]="book.image" [alt]="book.title" />
+          </div>
+          <div class="book-front-copy">
+            <h3>{{ book.title }}</h3>
+            <span
+              class="text-lg font-bold"
+              [ngClass]="book.isAvailable ? 'text-green-500' : 'text-red-500'"
+            >
+              {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
+            </span>
+            <p>{{ book.price }}</p>
+          </div>
         </div>
-        <div class="book-front-copy">
+
+        <div class="book-face book-back">
+          <span class="back-label">About this book</span>
           <h3>{{ book.title }}</h3>
-          <span
-            class="text-lg font-bold"
-            [ngClass]="book.isAvailable ? 'text-green-500' : 'text-red-500'"
-          >
-            {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
-          </span>
-          <p>{{ book.price }}</p>
-        </div>
-      </div>
-
-      <div class="book-face book-back">
-        <span class="back-label">About this book</span>
-        <h3>{{ book.title }}</h3>
-        <p>{{ book.description }}</p>
-        <p>Author : {{ book.author }}</p>
-        <p>Category : {{ book.category }}</p>
-        <p>Stock : {{ book.stock }}</p>
-        <div class="book-actions">
-          <button (click)="updateBook(book)">Update</button>
-          <button (click)="deleteBook(book.id)">Delete</button>
-          <!--           <button>Add to Cart</button>
+          <p>{{ book.description }}</p>
+          <p>Author : {{ book.author }}</p>
+          <p>Category : {{ book.category }}</p>
+          <p>Stock : {{ book.stock }}</p>
+          <div class="book-actions">
+            <button (click)="updateBook(book)">Update</button>
+            <button (click)="deleteBook(book.id)">Delete</button>
+            <!--           <button>Add to Cart</button>
           <button class="buy-now">Buy Now</button> -->
+          </div>
         </div>
       </div>
+    </article>
+  </div>
+  <div
+    class="books-header"
+    style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0"
+  >
+    <div class="ml-10 text-red-600 font-bold">Total books: {{ totalBooks }}</div>
+    <div class="pagination-controls gap-4 flex items-center mb-10 mr-10">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage <= 0"
+        [ngClass]="currentPage <= 0 ? 'btn-disable' : ''"
+        class="bg-blue-400 px-4 py-2 rounder font-bold"
+      >
+        << Previous
+      </button>
+      <span>Page {{ currentPage + 1 }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="(currentPage + 1) * pageSize >= totalBooks"
+        [ngClass]="(currentPage + 1) * pageSize >= totalBooks ? 'btn-disable' : ''"
+        class="bg-blue-400 px-4 py-2 rounder font-bold"
+      >
+        Next >>>
+      </button>
     </div>
-  </article>
-</div>
-<div
-  class="books-header"
-  style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0"
->
-  <div class="ml-10 text-red-600 font-bold">Total books: {{ totalBooks }}</div>
-  <div class="pagination-controls gap-4 flex items-center mb-10 mr-10">
-    <button
-      (click)="prevPage()"
-      [disabled]="currentPage <= 0"
-      [ngClass]="currentPage <= 0 ? 'btn-disable' : ''"
-      class="bg-blue-400 px-4 py-2 rounder font-bold"
-    >
-      << Previous
-    </button>
-    <span>Page {{ currentPage + 1 }}</span>
-    <button
-      (click)="nextPage()"
-      [disabled]="(currentPage + 1) * pageSize >= totalBooks"
-      [ngClass]="(currentPage + 1) * pageSize >= totalBooks ? 'btn-disable' : ''"
-      class="bg-blue-400 px-4 py-2 rounder font-bold"
-    >
-      Next >>>
-    </button>
   </div>
 </div>

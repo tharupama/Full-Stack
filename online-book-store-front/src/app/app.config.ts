@@ -8,6 +8,8 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { authInterceptor } from './auth/auth-interceptor';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideZonelessChangeDetection(),
     provideAnimations(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideToastr({
       timeOut: 4000, // How long the toast stays visible (in ms)
       positionClass: 'toast-top-right', // Location of the toast popup

@@ -1,17 +1,33 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BookDto } from '../../dto/BookDto';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BookService } from '../service/book-service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { BookUpdateModal } from '../book-update-modal/book-update-modal';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BookUpdateDto } from '../../dto/BookUpdateDto';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-admin',
-  imports: [FormsModule, CommonModule, BookUpdateModal],
+  imports: [
+    FormsModule,
+    CommonModule,
+    BookUpdateModal,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatIconModule,
+  ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })

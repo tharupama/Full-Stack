@@ -183,6 +183,11 @@ h3{
 .book-actions .buy-now {
 	background: #fff5e8;
 }
+.btn-disable{
+     background-color: #cccc !important;
+     color: #666666 !important;
+     cursor: not-allowed;
+}
 
 @media (max-width: 640px) {
 	.books-page {

@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping("api/v1/book-controller")
-@CrossOrigin(origins = "http://localhost:4200")
+@SecurityRequirement(name = "Bearer Authentication")//for swagger
+
 public class BookController {
     @Autowired
     BookService bookService;
@@ -23,6 +25,7 @@ public class BookController {
         String returnMsg = bookService.bookSave(book);
         return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success",returnMsg), HttpStatus.CREATED);
     }
+
 
     @PutMapping("/update")
     public ResponseEntity<StandardResponse> update(@RequestBody Book book) {
