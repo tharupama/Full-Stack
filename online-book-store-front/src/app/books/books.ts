@@ -5,14 +5,17 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { CartService } from '../service/cart-service';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { UiService } from '../service/ui-service';
 
 @Component({
   selector: 'app-books',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, FormsModule],
   templateUrl: './books.html',
   styleUrl: './books.css',
 })
 export class Books implements OnInit, OnDestroy {
+  searchTerm: string = '';
   cartItemCount = 0;
   private subscription!: Subscription;
   books: any[] = [];
@@ -23,7 +26,8 @@ export class Books implements OnInit, OnDestroy {
     private cartService: CartService,
     private bookService: BookService,
     private cdr: ChangeDetectorRef,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private uiService: UiService
   ) {}
   ngOnInit(): void {
     this.loadBooks(this.currentPage, this.pageSize);
@@ -39,9 +43,38 @@ export class Books implements OnInit, OnDestroy {
   }
   openCartDrawer() {
     console.log('Opening cart drawer...');
-    // Here you would trigger your Angular Material Side Drawer or Modal to open
+    this.uiService.openCart();
   }
-
+  searchBooks() {
+    if (this.searchTerm.trim() === '') {
+      this.loadBooks(this.currentPage, this.pageSize);
+    } else {
+      this.bookService.searchBooks(this.searchTerm, this.currentPage, this.pageSize).subscribe(
+        (res) => {
+          const payload = res?.data ?? res;
+          const books = payload?.books ?? [];
+          this.books = books.map((b: any) => ({
+            id: b.id,
+            title: b.title,
+            image: b.imgUrl,
+            category: b.category,
+            author: b.author,
+            description: b.description,
+            price: b.price,
+            stock: b.stock,
+            isAvailable: b.isAvailable,
+          }));
+          this.totalBooks = payload?.totalBookCount ?? 0;
+          this.currentPage = this.searchTerm ? 0 : this.currentPage;
+          this.cdr.markForCheck();
+        },
+        (err) => {
+          console.error('Error searching books:', err);
+          this.toastr.error('Error searching books.');
+        }
+      );
+    }
+  }
   loadBooks(page: number, size: number) {
     this.bookService.getBooksByPage(page, size).subscribe(
       (res) => {
@@ -54,7 +87,7 @@ export class Books implements OnInit, OnDestroy {
           category: b.category,
           author: b.author,
           description: b.description,
-          price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
+          price: b.price,
           stock: b.stock,
           isAvailable: b.isAvailable,
         }));

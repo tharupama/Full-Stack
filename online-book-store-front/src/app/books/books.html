@@ -2,10 +2,10 @@
   <div class="grid grid-cols-[3fr_auto] items-justify-between">
     <div class="search-bar flex flex-column">
       <div class="flex flex-row">
-        <input type="text" placeholder="Search for books..." />
+        <input type="text" placeholder="Search for books..." [(ngModel)]="searchTerm" />
       </div>
       <div>
-        <button>Search</button>
+        <button (click)="searchBooks()">Search</button>
       </div>
     </div>
     <div>
@@ -35,7 +35,7 @@
             >
               {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
             </span>
-            <p>{{ book.price }}</p>
+            <p>{{ book.price | currency : 'USD' : 'symbol' : '1.2-2' }}</p>
           </div>
         </div>
 
@@ -81,7 +81,7 @@
   </div>
   <button
     (click)="openCartDrawer()"
-    class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full shadow-2xl hover:scale-110 hover:shadow-indigo-500/50 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300"
+    class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-800 text-white rounded-full shadow-2xl hover:scale-110 hover:shadow-indigo-500/50 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-300"
     aria-label="Open Shopping Cart"
   >
     <!-- Cart Icon -->

@@ -34,7 +34,7 @@ public class SecurityConfig {
                         ).permitAll()
                         // Matches exactly what the Gateway is sending: "ROLE_Admin"
                         .requestMatchers("/api/v1/book-controller/save", "/api/v1/book-controller/update", "/api/v1/book-controller/delete")
-                        .hasAuthority("ROLE_Admin")
+                        .hasRole("Admin")//has role add automaticall ROLE_ prefix to the role name
 
                         .anyRequest().authenticated()
                 )

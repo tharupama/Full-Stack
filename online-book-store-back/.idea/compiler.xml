@@ -24,6 +24,15 @@
         <module name="book-service" />
         <module name="AuthService" />
       </profile>
+      <profile name="Annotation profile for order-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="order-service" />
+      </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
@@ -33,6 +42,7 @@
       <module name="ServiceRegistry" options="-parameters" />
       <module name="book-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="order-service" options="-parameters" />
     </option>
   </component>
 </project>

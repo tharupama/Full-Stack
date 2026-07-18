@@ -39,9 +39,45 @@ export class CartService {
 
     this.cartItemsSubject.next([...currentItems]);
   }
+  // ✅ ADD THIS: Remove a single item completely
+  removeItem(itemId: number) {
+    const currentItems = this.cartItemsSubject.value;
+    const updatedItems = currentItems.filter((item) => item.id !== itemId);
+    this.cartItemsSubject.next(updatedItems);
+  }
+
+  // ✅ ADD THIS: Decrease quantity by 1 (remove if quantity reaches 0)
+  decreaseQuantity(itemId: number) {
+    const currentItems = this.cartItemsSubject.value;
+    const item = currentItems.find((item) => item.id === itemId);
+
+    if (item) {
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+        this.cartItemsSubject.next([...currentItems]);
+      } else {
+        // If quantity is 1, remove the item completely
+        this.removeItem(itemId);
+      }
+    }
+  }
+
+  // ✅ ADD THIS: Increase quantity by 1
+  increaseQuantity(itemId: number) {
+    const currentItems = this.cartItemsSubject.value;
+    const item = currentItems.find((item) => item.id === itemId);
+
+    if (item) {
+      item.quantity += 1;
+      this.cartItemsSubject.next([...currentItems]);
+    }
+  }
 
   // Method to clear the cart
   clearCart() {
     this.cartItemsSubject.next([]);
   }
+  public total$: Observable<number> = this.cartItems$.pipe(
+    map((items) => items.reduce((total, item) => total + item.price * item.quantity, 0))
+  );
 }

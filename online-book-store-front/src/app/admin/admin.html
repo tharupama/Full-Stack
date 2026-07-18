@@ -172,7 +172,7 @@
             >
               {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
             </span>
-            <p>{{ book.price }}</p>
+            <p>{{ book.price | currency : 'USD' : 'symbol' : '1.2-2' }}</p>
           </div>
         </div>
 

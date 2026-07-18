@@ -1,0 +1,242 @@
+.app-container {
+  /* Adjust 64px if your header is a different height */
+  height: calc(100vh - 64px); 
+}
+/* Make the drawer a flex column so the footer stays at the bottom */
+.cart-drawer {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Allow the list to scroll if there are many items */
+.cart-items-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+
+/* Style individual cart items */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  height: auto !important; /* Override default mat-list-item height */
+  padding: 12px 16px !important;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.item-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.item-price {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.item-total {
+  font-weight: bold;
+  color: #1976d2; /* Material Primary Blue */
+  font-size: 14px;
+}
+
+/* Fixed footer at the bottom of the drawer */
+.cart-footer {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+}
+
+/* Empty state styling */
+.empty-cart-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  color: #888;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  color: #ccc;
+}
+
+.flex-spacer {
+  flex: 1 1 auto;
+}
+.cart-footer {
+  padding: 16px;
+  border-top: 2px solid #e0e0e0;
+  background: #f9f9f9;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.total-amount {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1976d2; /* Material Primary Blue */
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cart-actions button {
+  flex: 1;
+}
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #e0e0e0;
+  height: auto !important;
+  padding: 16px !important;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.item-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
+}
+
+.item-price {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* ✅ Quantity Controls Styling */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.quantity-controls button {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.quantity-controls mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+
+.quantity-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ✅ Right Section (Total + Delete) */
+.item-right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.item-total {
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 15px;
+}
+
+.item-right-section button[mat-icon-button] {
+  width: 32px;
+  height: 32px;
+}
+
+.item-right-section mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.cart-footer {
+  padding: 16px;
+  border-top: 2px solid #e0e0e0;
+  background: #f9f9f9;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.total-amount {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cart-actions button {
+  flex: 1;
+}

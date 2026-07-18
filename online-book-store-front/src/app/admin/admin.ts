@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BookDto } from '../../dto/BookDto';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { BookService } from '../service/book-service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
@@ -27,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatSelectModule,
     MatIconModule,
+    CurrencyPipe,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
@@ -71,7 +72,7 @@ export class Admin implements OnInit {
             category: b.category,
             author: b.author,
             description: b.description,
-            price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
+            price: b.price,
             stock: b.stock,
             isAvailable: b.isAvailable,
           }));
@@ -122,7 +123,7 @@ export class Admin implements OnInit {
           category: b.category,
           author: b.author,
           description: b.description,
-          price: '$' + (typeof b.price === 'number' ? b.price.toFixed(2) : b.price),
+          price: b.price,
           stock: b.stock,
           isAvailable: b.isAvailable,
         }));
