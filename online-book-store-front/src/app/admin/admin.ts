@@ -17,6 +17,8 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { PeriodicElement } from '../../dto/PeriodicElement';
+import { OrderService } from '../service/order-service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-admin',
@@ -41,13 +43,9 @@ import { PeriodicElement } from '../../dto/PeriodicElement';
 })
 export class Admin implements OnInit {
   Notification_status: string = 'NOT_PERFORMED';
-  ELEMENT_DATA: PeriodicElement[] = [
-    { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-    { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-    { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  ];
+  ELEMENT_DATA: PeriodicElement[] = [];
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'update', 'delete'];
-  dataSource = this.ELEMENT_DATA;
+  dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
 
   searchTerm: string = '';
   bookDto: BookDto = {
@@ -66,13 +64,16 @@ export class Admin implements OnInit {
   pageSize: number = 4;
   constructor(
     private bookService: BookService,
+    private orderService: OrderService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) {}
   ngOnInit(): void {
     this.loadBooks(this.currentPage, this.pageSize);
+    this.getNotifications();
   }
+
   searchBooks() {
     if (this.searchTerm.trim() === '') {
       this.loadBooks(this.currentPage, this.pageSize);
@@ -123,6 +124,54 @@ export class Admin implements OnInit {
       (error) => {
         console.error('Error adding book:', error);
         this.toastr.error('Error adding book.');
+      }
+    );
+  }
+
+  getNotifications() {
+    console.log('get Notification admin back load');
+    this.orderService.getNotifications().subscribe(
+      (res) => {
+        const notifications = res;
+        this.ELEMENT_DATA = notifications.map((n: any) => ({
+          position: n.notificationId,
+          name: n.message,
+          weight: n.createdAt,
+          symbol: n.status,
+        }));
+        this.dataSource.data = this.ELEMENT_DATA;
+        console.log(this.ELEMENT_DATA);
+      },
+      (err) => {
+        console.error('error loading notific', err);
+        this.toastr.error('Error loading notifications');
+      }
+    );
+  }
+
+  updateNotifications(element: any) {
+    console.log('update notification triggered');
+    this.orderService.updateNotifications(element.position, element.symbol).subscribe(
+      (res) => {
+        const payload = res?.data ?? res;
+        this.toastr.success(payload);
+      },
+      (err) => {
+        this.toastr.error('update failed');
+      }
+    );
+  }
+
+  deleteNotification(element: any) {
+    console.log('delete triggered from admin ts');
+    this.orderService.deleteNotification(element.position).subscribe(
+      (res) => {
+        const payload = res?.data ?? res;
+        this.toastr.success(payload);
+        this.getNotifications();
+      },
+      (err) => {
+        this.toastr.error('Delete dailed');
       }
     );
   }

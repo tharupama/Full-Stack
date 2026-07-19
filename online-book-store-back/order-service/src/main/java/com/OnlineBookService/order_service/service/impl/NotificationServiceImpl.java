@@ -7,13 +7,15 @@ import com.OnlineBookService.order_service.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private NotificationRepo notificationRepo;
     @Override
-    public Notification getNotification() {
-        return notificationRepo.getAllNotifications();
+    public List<Notification> getNotification() {
+        return notificationRepo.findAll();
     }
 
     @Override

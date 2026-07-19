@@ -255,9 +255,9 @@
         <td mat-cell *matCellDef="let element">
           <mat-form-field appearance="outline" class="w-small mt-2">
             <mat-label>Status</mat-label>
-            <mat-select #category="ngModel" [(ngModel)]="Notification_status">
-              <mat-option value="mystery">NOT_PERFORMED</mat-option>
-              <mat-option value="biography">PERFORMED</mat-option>
+            <mat-select #statusSelect="ngModel" [(ngModel)]="element.symbol">
+              <mat-option value="NOT_PERFORMED">NOT_PERFORMED</mat-option>
+              <mat-option value="PERFORMED">PERFORMED</mat-option>
             </mat-select>
             <mat-icon matSuffix>notification_important</mat-icon>
           </mat-form-field>
@@ -267,13 +267,25 @@
       <ng-container matColumnDef="update">
         <th mat-header-cell *matHeaderCellDef>Update</th>
         <td mat-cell *matCellDef="let element">
-          <button matButton="filled" class="!bg-amber-500 !text-black">update</button>
+          <button
+            mat-flat-button
+            class="!bg-amber-500 !text-black"
+            (click)="updateNotifications(element)"
+          >
+            update
+          </button>
         </td>
       </ng-container>
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
         <td mat-cell *matCellDef="let element">
-          <button matButton="filled" class="!bg-red-600 !text-black">Delete</button>
+          <button
+            mat-flat-button
+            (click)="deleteNotification(element)"
+            class="!bg-red-600 !text-black"
+          >
+            Delete
+          </button>
         </td>
       </ng-container>
 

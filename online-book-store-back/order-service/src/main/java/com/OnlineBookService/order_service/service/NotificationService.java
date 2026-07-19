@@ -3,8 +3,10 @@ package com.OnlineBookService.order_service.service;
 import com.OnlineBookService.order_service.entity.Notification;
 import com.OnlineBookService.order_service.enums.Enums;
 
+import java.util.List;
+
 public interface NotificationService {
-    Notification getNotification();
+   List<Notification> getNotification();
 
     String updateNotification(Long notificationId, Enums status);
 
