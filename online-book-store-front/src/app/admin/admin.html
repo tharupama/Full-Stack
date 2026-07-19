@@ -1,221 +1,284 @@
-<div class="books-page">
-  <form
-    #bookForm="ngForm"
-    (ngSubmit)="addBook()"
-    class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8 my-8"
-  >
-    <!-- Form Header -->
-    <div class="mb-8 border-b pb-4">
-      <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <mat-icon class="text-indigo-600 !text-3xl">library_add</mat-icon>
-        Add New Book
-      </h2>
-      <p class="text-gray-500 mt-1">Fill in the details to add a new book to the inventory.</p>
-    </div>
-
-    <!-- Two-Column Responsive Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-      <!-- LEFT COLUMN -->
-      <div class="flex flex-col gap-2">
-        <!-- Title -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Book Title</mat-label>
-          <input
-            matInput
-            name="title"
-            #title="ngModel"
-            [(ngModel)]="bookDto.title"
-            placeholder="Enter book title"
-            required
-          />
-          <mat-icon matSuffix>menu_book</mat-icon>
-          <mat-error *ngIf="title.invalid && title.touched">Title is required</mat-error>
-        </mat-form-field>
-
-        <!-- Image URL -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Image URL</mat-label>
-          <input
-            matInput
-            name="imgUrl"
-            #imgUrl="ngModel"
-            [(ngModel)]="bookDto.imgUrl"
-            placeholder="Enter image URL"
-          />
-          <mat-icon matSuffix>image</mat-icon>
-        </mat-form-field>
-
-        <!-- Category -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Category</mat-label>
-          <mat-select name="category" #category="ngModel" [(ngModel)]="bookDto.category">
-            <mat-option value="science-fiction">Science Fiction</mat-option>
-            <mat-option value="mystery">Mystery</mat-option>
-            <mat-option value="biography">Biography</mat-option>
-            <mat-option value="science">Science</mat-option>
-            <mat-option value="history">History</mat-option>
-            <mat-option value="romance">Romance</mat-option>
-          </mat-select>
-          <mat-icon matSuffix>category</mat-icon>
-        </mat-form-field>
-
-        <!-- Author -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Author</mat-label>
-          <input
-            matInput
-            name="author"
-            #author="ngModel"
-            [(ngModel)]="bookDto.author"
-            placeholder="Enter author name"
-          />
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="flex flex-col gap-2">
-        <!-- Description -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Description</mat-label>
-          <textarea
-            matInput
-            name="description"
-            #description="ngModel"
-            [(ngModel)]="bookDto.description"
-            placeholder="Enter book description"
-            rows="4"
-          ></textarea>
-          <mat-icon matSuffix>description</mat-icon>
-        </mat-form-field>
-
-        <!-- Price -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Price</mat-label>
-          <input
-            matInput
-            name="price"
-            #price="ngModel"
-            [(ngModel)]="bookDto.price"
-            type="number"
-            placeholder="0.00"
-            min="0"
-            required
-          />
-          <mat-icon matSuffix>attach_money</mat-icon>
-          <mat-error *ngIf="price.invalid && price.touched">Valid price is required</mat-error>
-        </mat-form-field>
-
-        <!-- Stock -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Stock</mat-label>
-          <input
-            matInput
-            name="stock"
-            #stock="ngModel"
-            [(ngModel)]="bookDto.stock"
-            type="number"
-            placeholder="0"
-            min="0"
-            required
-          />
-          <mat-icon matSuffix>inventory_2</mat-icon>
-          <mat-error *ngIf="stock.invalid && stock.touched">Valid stock is required</mat-error>
-        </mat-form-field>
-
-        <!-- Availability -->
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Availability</mat-label>
-          <mat-select name="availability" #availability="ngModel" [(ngModel)]="bookDto.isAvailable">
-            <mat-option [value]="true">Available</mat-option>
-            <mat-option [value]="false">Unavailable</mat-option>
-          </mat-select>
-          <mat-icon matSuffix>check_circle</mat-icon>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Submit Action -->
-    <div class="flex justify-end mt-8 pt-6 border-t">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        class="!px-8 !py-3 text-lg font-semibold shadow-lg"
+<mat-tab-group>
+  <mat-tab label="Book Management">
+    <div class="books-page">
+      <form
+        #bookForm="ngForm"
+        (ngSubmit)="addBook()"
+        class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8 my-8"
       >
-        <mat-icon>save</mat-icon>
-        Save Book
-      </button>
-    </div>
-  </form>
-  <div class="search-bar flex flex-column">
-    <div class="flex flex-row">
-      <input type="text" placeholder="Search for books..." [(ngModel)]="searchTerm" />
-    </div>
-    <div>
-      <button (click)="searchBooks()">Search</button>
-    </div>
-  </div>
+        <!-- Form Header -->
+        <div class="mb-8 border-b pb-4">
+          <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <mat-icon class="text-indigo-600 !text-3xl">library_add</mat-icon>
+            Add New Book
+          </h2>
+          <p class="text-gray-500 mt-1">Fill in the details to add a new book to the inventory.</p>
+        </div>
 
-  <div class="books-grid">
-    <article class="book-card" *ngFor="let book of books">
-      <div class="book-card-inner">
-        <div class="book-face book-front">
-          <div class="book-art">
-            <img [src]="book.image" [alt]="book.title" />
+        <!-- Two-Column Responsive Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+          <!-- LEFT COLUMN -->
+          <div class="flex flex-col gap-2">
+            <!-- Title -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Book Title</mat-label>
+              <input
+                matInput
+                name="title"
+                #title="ngModel"
+                [(ngModel)]="bookDto.title"
+                placeholder="Enter book title"
+                required
+              />
+              <mat-icon matSuffix>menu_book</mat-icon>
+              <mat-error *ngIf="title.invalid && title.touched">Title is required</mat-error>
+            </mat-form-field>
+
+            <!-- Image URL -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Image URL</mat-label>
+              <input
+                matInput
+                name="imgUrl"
+                #imgUrl="ngModel"
+                [(ngModel)]="bookDto.imgUrl"
+                placeholder="Enter image URL"
+              />
+              <mat-icon matSuffix>image</mat-icon>
+            </mat-form-field>
+
+            <!-- Category -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Category</mat-label>
+              <mat-select name="category" #category="ngModel" [(ngModel)]="bookDto.category">
+                <mat-option value="science-fiction">Science Fiction</mat-option>
+                <mat-option value="mystery">Mystery</mat-option>
+                <mat-option value="biography">Biography</mat-option>
+                <mat-option value="science">Science</mat-option>
+                <mat-option value="history">History</mat-option>
+                <mat-option value="romance">Romance</mat-option>
+              </mat-select>
+              <mat-icon matSuffix>category</mat-icon>
+            </mat-form-field>
+
+            <!-- Author -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Author</mat-label>
+              <input
+                matInput
+                name="author"
+                #author="ngModel"
+                [(ngModel)]="bookDto.author"
+                placeholder="Enter author name"
+              />
+              <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
           </div>
-          <div class="book-front-copy">
-            <h3>{{ book.title }}</h3>
-            <span
-              class="text-lg font-bold"
-              [ngClass]="book.isAvailable ? 'text-green-500' : 'text-red-500'"
-            >
-              {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
-            </span>
-            <p>{{ book.price | currency : 'USD' : 'symbol' : '1.2-2' }}</p>
+
+          <!-- RIGHT COLUMN -->
+          <div class="flex flex-col gap-2">
+            <!-- Description -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Description</mat-label>
+              <textarea
+                matInput
+                name="description"
+                #description="ngModel"
+                [(ngModel)]="bookDto.description"
+                placeholder="Enter book description"
+                rows="4"
+              ></textarea>
+              <mat-icon matSuffix>description</mat-icon>
+            </mat-form-field>
+
+            <!-- Price -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Price</mat-label>
+              <input
+                matInput
+                name="price"
+                #price="ngModel"
+                [(ngModel)]="bookDto.price"
+                type="number"
+                placeholder="0.00"
+                min="0"
+                required
+              />
+              <mat-icon matSuffix>attach_money</mat-icon>
+              <mat-error *ngIf="price.invalid && price.touched">Valid price is required</mat-error>
+            </mat-form-field>
+
+            <!-- Stock -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Stock</mat-label>
+              <input
+                matInput
+                name="stock"
+                #stock="ngModel"
+                [(ngModel)]="bookDto.stock"
+                type="number"
+                placeholder="0"
+                min="0"
+                required
+              />
+              <mat-icon matSuffix>inventory_2</mat-icon>
+              <mat-error *ngIf="stock.invalid && stock.touched">Valid stock is required</mat-error>
+            </mat-form-field>
+
+            <!-- Availability -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Availability</mat-label>
+              <mat-select
+                name="availability"
+                #availability="ngModel"
+                [(ngModel)]="bookDto.isAvailable"
+              >
+                <mat-option [value]="true">Available</mat-option>
+                <mat-option [value]="false">Unavailable</mat-option>
+              </mat-select>
+              <mat-icon matSuffix>check_circle</mat-icon>
+            </mat-form-field>
           </div>
         </div>
 
-        <div class="book-face book-back">
-          <span class="back-label">About this book</span>
-          <h3>{{ book.title }}</h3>
-          <p>{{ book.description }}</p>
-          <p>Author : {{ book.author }}</p>
-          <p>Category : {{ book.category }}</p>
-          <p>Stock : {{ book.stock }}</p>
-          <div class="book-actions">
-            <button (click)="updateBook(book)">Update</button>
-            <button (click)="deleteBook(book.id)">Delete</button>
-            <!--           <button>Add to Cart</button>
+        <!-- Submit Action -->
+        <div class="flex justify-end mt-8 pt-6 border-t">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="!px-8 !py-3 text-lg font-semibold shadow-lg"
+          >
+            <mat-icon>save</mat-icon>
+            Save Book
+          </button>
+        </div>
+      </form>
+      <div class="search-bar flex flex-column">
+        <div class="flex flex-row">
+          <input type="text" placeholder="Search for books..." [(ngModel)]="searchTerm" />
+        </div>
+        <div>
+          <button (click)="searchBooks()">Search</button>
+        </div>
+      </div>
+
+      <div class="books-grid">
+        <article class="book-card" *ngFor="let book of books">
+          <div class="book-card-inner">
+            <div class="book-face book-front">
+              <div class="book-art">
+                <img [src]="book.image" [alt]="book.title" />
+              </div>
+              <div class="book-front-copy">
+                <h3>{{ book.title }}</h3>
+                <span
+                  class="text-lg font-bold"
+                  [ngClass]="book.isAvailable ? 'text-green-500' : 'text-red-500'"
+                >
+                  {{ book.isAvailable ? '✅ Available' : '❌ Unavailable' }}
+                </span>
+                <p>{{ book.price | currency : 'USD' : 'symbol' : '1.2-2' }}</p>
+              </div>
+            </div>
+
+            <div class="book-face book-back">
+              <span class="back-label">About this book</span>
+              <h3>{{ book.title }}</h3>
+              <p>{{ book.description }}</p>
+              <p>Author : {{ book.author }}</p>
+              <p>Category : {{ book.category }}</p>
+              <p>Stock : {{ book.stock }}</p>
+              <div class="book-actions">
+                <button (click)="updateBook(book)">Update</button>
+                <button (click)="deleteBook(book.id)">Delete</button>
+                <!--           <button>Add to Cart</button>
           <button class="buy-now">Buy Now</button> -->
+              </div>
+            </div>
           </div>
+        </article>
+      </div>
+      <div
+        class="books-header"
+        style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0"
+      >
+        <div class="ml-10 text-red-600 font-bold">Total books: {{ totalBooks }}</div>
+        <div class="pagination-controls gap-4 flex items-center mb-10 mr-10">
+          <button
+            (click)="prevPage()"
+            [disabled]="currentPage <= 0"
+            [ngClass]="currentPage <= 0 ? 'btn-disable' : ''"
+            class="bg-blue-400 px-4 py-2 rounder font-bold"
+          >
+            << Previous
+          </button>
+          <span>Page {{ currentPage + 1 }}</span>
+          <button
+            (click)="nextPage()"
+            [disabled]="(currentPage + 1) * pageSize >= totalBooks"
+            [ngClass]="(currentPage + 1) * pageSize >= totalBooks ? 'btn-disable' : ''"
+            class="bg-blue-400 px-4 py-2 rounder font-bold"
+          >
+            Next >>>
+          </button>
         </div>
       </div>
-    </article>
-  </div>
-  <div
-    class="books-header"
-    style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0"
-  >
-    <div class="ml-10 text-red-600 font-bold">Total books: {{ totalBooks }}</div>
-    <div class="pagination-controls gap-4 flex items-center mb-10 mr-10">
-      <button
-        (click)="prevPage()"
-        [disabled]="currentPage <= 0"
-        [ngClass]="currentPage <= 0 ? 'btn-disable' : ''"
-        class="bg-blue-400 px-4 py-2 rounder font-bold"
-      >
-        << Previous
-      </button>
-      <span>Page {{ currentPage + 1 }}</span>
-      <button
-        (click)="nextPage()"
-        [disabled]="(currentPage + 1) * pageSize >= totalBooks"
-        [ngClass]="(currentPage + 1) * pageSize >= totalBooks ? 'btn-disable' : ''"
-        class="bg-blue-400 px-4 py-2 rounder font-bold"
-      >
-        Next >>>
-      </button>
     </div>
-  </div>
-</div>
+  </mat-tab>
+  <mat-tab label="Notification">
+    <table mat-table [dataSource]="dataSource" class="mat-shadow-2">
+      <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>Notification Id</th>
+        <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Message</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-form-field appearance="outline" class="w-small mt-2">
+            <mat-label>Status</mat-label>
+            <mat-select #category="ngModel" [(ngModel)]="Notification_status">
+              <mat-option value="mystery">NOT_PERFORMED</mat-option>
+              <mat-option value="biography">PERFORMED</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>notification_important</mat-icon>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="update">
+        <th mat-header-cell *matHeaderCellDef>Update</th>
+        <td mat-cell *matCellDef="let element">
+          <button matButton="filled" class="!bg-amber-500 !text-black">update</button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Delete</th>
+        <td mat-cell *matCellDef="let element">
+          <button matButton="filled" class="!bg-red-600 !text-black">Delete</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-tab>
+</mat-tab-group>

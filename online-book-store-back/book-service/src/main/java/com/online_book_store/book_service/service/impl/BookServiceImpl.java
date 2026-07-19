@@ -61,4 +61,16 @@ public class BookServiceImpl implements BookService {
         BookPaginatedResponseDto bookPaginatedResponseDto = new BookPaginatedResponseDto(bookMapper.pageBookListToListBook(bookPage), bookRepository.count());
         return bookPaginatedResponseDto;
     }
+
+    @Override
+    public boolean updateBookQuantity(Long bookId, int quantity) {
+        System.out.println("inside updateBookQuantity method in BookServiceImpl with bookId: " + bookId + " and quantity: " + quantity);
+        if(bookRepository.findById(bookId).isPresent()){
+            Book book = bookRepository.findById(bookId).get();
+            book.setStock(book.getStock() - quantity);
+            bookRepository.save(book);
+            return true;
+        }
+        return false;
+    }
 }

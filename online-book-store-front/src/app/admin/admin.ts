@@ -13,6 +13,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { PeriodicElement } from '../../dto/PeriodicElement';
 
 @Component({
   selector: 'app-admin',
@@ -28,11 +32,23 @@ import { MatIconModule } from '@angular/material/icon';
     MatSelectModule,
     MatIconModule,
     CurrencyPipe,
+    MatToolbar,
+    MatTabsModule,
+    MatTableModule,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })
 export class Admin implements OnInit {
+  Notification_status: string = 'NOT_PERFORMED';
+  ELEMENT_DATA: PeriodicElement[] = [
+    { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
+    { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
+    { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
+  ];
+  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'update', 'delete'];
+  dataSource = this.ELEMENT_DATA;
+
   searchTerm: string = '';
   bookDto: BookDto = {
     title: '',

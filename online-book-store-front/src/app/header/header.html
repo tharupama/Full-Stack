@@ -1,4 +1,4 @@
-<mat-toolbar class="!bg-amber-200">
+<mat-toolbar class="!bg-gradient-to-b from-amber-300 to-amber-50 !bg-transparent">
   <div class="flex justify-between items-center w-full">
     <div class="flex justify-items-start items-center gap-2">
       <img src="/logo.png" alt="logo image" class="w-16 h-16 cursor-pointer" routerLink="" />
@@ -6,7 +6,7 @@
     </div>
     <span class="adminPanel" *ngIf="isLoggedIn() && getRole() == 'Admin'">
       <button
-        class="bg-blue-500 px-5 py-2 font-bold cursor-pointer font-mono text-2xl rounded hover:bg-blue-600 transition duration-200"
+        class="bg-gradient-to-b from-orange-500 to-orange-200 px-5 py-2 font-bold cursor-pointer font-mono text-2xl rounded transition duration-200"
         type="submit"
         routerLink="/admin"
       >

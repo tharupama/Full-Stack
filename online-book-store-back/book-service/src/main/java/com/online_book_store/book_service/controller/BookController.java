@@ -49,4 +49,9 @@ public class BookController {
         BookPaginatedResponseDto bookPaginatedResponseDto = bookService.getBooksByPageAndTitle(title,page,size);
         return new ResponseEntity<StandardResponse>(new StandardResponse(200, "success", bookPaginatedResponseDto), HttpStatus.OK);
     }
+    @PutMapping("/update-quantity")
+    public boolean updateBookQuantity(@RequestParam Long bookId, @RequestParam int quantity) {
+        boolean result = bookService.updateBookQuantity(bookId, quantity);
+        return result;
+    }
 }

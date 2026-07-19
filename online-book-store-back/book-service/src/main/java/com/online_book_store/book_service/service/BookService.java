@@ -14,4 +14,6 @@ public interface BookService{
     BookPaginatedResponseDto getBooksByPage(int page, int size);
 
     BookPaginatedResponseDto getBooksByPageAndTitle(String title,int page, int size);
+
+    boolean updateBookQuantity(Long bookId, int quantity);
 }

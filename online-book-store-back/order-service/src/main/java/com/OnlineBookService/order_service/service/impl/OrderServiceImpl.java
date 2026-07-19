@@ -6,15 +6,24 @@ import com.OnlineBookService.order_service.entity.Order;
 import com.OnlineBookService.order_service.entity.OrderItem;
 import com.OnlineBookService.order_service.repository.OrderRepo;
 import com.OnlineBookService.order_service.service.OrderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    private WebClient webClient;
     private OrderRepo orderRepo;
+    private final BookServiceClient bookServiceClient;
     @Override
+
+
     public String saveOrder(BookOrderRequestDto bookOrderRequestDto) {
+        System.out.println("inside save book order service");
         Order order = new Order();
         order.setCustomerId(bookOrderRequestDto.customerId);
         order.setOrderStatus("PENDING");
@@ -23,7 +32,10 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setBookId(bookReq.getBookId());
             orderItem.setQuantity(bookReq.getQuantity());
-
+            boolean isUpdated = bookServiceClient.deductQuantityFromInventory(bookReq.getBookId(), bookReq.getQuantity());
+            if (!isUpdated) {
+                System.out.println("Failed to deduct quantity for bookId: " + bookReq.getBookId() + ". Rolling back transaction.");
+            }
             order.addItem(orderItem);
         }
         if(orderRepo.save(order) == null) {
@@ -53,5 +65,6 @@ public class OrderServiceImpl implements OrderService {
      }else{
          return "Order not found";
     }
+
     }
 }
