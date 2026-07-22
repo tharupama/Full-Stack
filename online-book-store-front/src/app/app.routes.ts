@@ -7,6 +7,8 @@ import { Admin } from './admin/admin';
 import { authGuard } from './auth/auth-guaed';
 import { Forbidden } from './forbidden/forbidden';
 import { Books } from './books/books';
+import { Profile } from './profile/profile';
+import { PaymentSuccess } from './payment-success/payment-success';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -15,4 +17,11 @@ export const routes: Routes = [
   { path: 'admin', component: Admin, canActivate: [authGuard], data: { roles: ['Admin'] } },
   { path: 'forbidden', component: Forbidden },
   { path: 'books', component: Books },
+  {
+    path: 'profile',
+    component: Profile,
+    canActivate: [authGuard],
+    data: { roles: ['User', 'Admin'] },
+  },
+  { path: 'payment-success', component: PaymentSuccess },
 ];

@@ -3,8 +3,8 @@ package com.OnlineBookStore.ApiGateway.configuration;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +32,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        // 0. Allow CORS Preflight (OPTIONS) requests to pass immediately without auth checks
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         final String requestTokenHeader = request.getHeader("Authorization");
 
@@ -88,33 +94,37 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } else {
                 // Token parsed, but custom validation (e.g., user disabled) failed
                 System.out.println("❌ [GATEWAY] Token failed custom validation.");
-                sendErrorResponse(response, "Token is invalid or user is inactive");
+                sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Token is invalid or user is inactive");
                 return; // BLOCK the request!
             }
 
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+            // These are genuine token errors -> 401 is correct
             System.out.println("❌ [GATEWAY] Token validation failed: " + e.getMessage());
-            sendErrorResponse(response, "Invalid or expired token");
+            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "Invalid or expired token");
             return; // BLOCK the request!
 
         } catch (Exception e) {
-            System.out.println("❌ [GATEWAY] Unexpected error during token validation: " + e.getMessage());
-            sendErrorResponse(response, "Authentication failed");
+            // ✅ THE FIX: Catch system crashes (like DB/Redis/Service down) and return 500, NOT 401
+            System.err.println("❌ [GATEWAY] SYSTEM ERROR during token validation (Is a dependency down?): " + e.getMessage());
+            e.printStackTrace(); // Prints the full stack trace to your console so you can see the REAL error
+
+            sendErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, "Authentication service is currently unavailable");
             return; // BLOCK the request!
         }
     }
 
     /**
-     * Helper method to cleanly send a 401 Unauthorized JSON response
+     * Helper method to cleanly send a JSON response with a dynamic HTTP Status
      */
-    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
+    private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
         // ✅ ADD THESE CORS HEADERS
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200"); // Allow your Angular app
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, No-Auth, X-User-Name, X-User-Roles");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(status.value()); // Use the dynamic status passed in
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"error\": \"" + message + "\"}");

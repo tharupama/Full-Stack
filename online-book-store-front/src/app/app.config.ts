@@ -10,6 +10,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { authInterceptor } from './auth/auth-interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideNgxStripe } from 'ngx-stripe';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,9 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideZonelessChangeDetection(),
     provideAnimations(),
+    provideNgxStripe(
+      'pk_test_51TIIzFCmTbH1UkuXDEFyAuuCRmSu6RDa5OuITaTprLlTaRjjmHEb5MJwBqobDQMLoPXwG34q9tbAy481nQ4xBbG2006UZgLGyr'
+    ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideToastr({
       timeOut: 4000, // How long the toast stays visible (in ms)

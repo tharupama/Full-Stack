@@ -1,78 +1,77 @@
-<!-- 1. Header listens to events and toggles the drawers directly -->
-<app-header> </app-header>
+<app-header></app-header>
 
-<!-- 2. Sidenav Container -->
 <mat-sidenav-container class="app-container">
-  <!-- LEFT DRAWER (Navigation) -->
+  <!-- LEFT DRAWER (Cart) -->
   <mat-sidenav #drawer mode="side" position="start">
     <div class="cart-items-list">
-      <!-- Use async pipe to get items. If empty, show the #emptyCart template -->
       <ng-container *ngIf="cartItems$ | async as items; else emptyCart">
-        <!-- Loop through each item -->
-        <div *ngFor="let item of items" class="cart-item">
-          <div class="item-details">
-            <h4 class="item-title">{{ item.title }}</h4>
-            <p class="item-price">
-              {{ item.price | currency : 'USD' : 'symbol' : '1.2-2' }} x {{ item.quantity }}
-            </p>
-            <div class="quantity-controls">
+        <ng-container *ngIf="items.length > 0; else emptyCart">
+          <div *ngFor="let item of items" class="cart-item">
+            <div class="item-details">
+              <h4 class="item-title">{{ item.title }}</h4>
+              <p class="item-price">
+                {{ item.price | currency : 'USD' : 'symbol' : '1.2-2' }} x {{ item.quantity }}
+              </p>
+              <div class="quantity-controls">
+                <button
+                  mat-icon-button
+                  (click)="cartService.decreaseQuantity(item.id)"
+                  aria-label="Decrease quantity"
+                >
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+                <span class="quantity-display">{{ item.quantity }}</span>
+                <button
+                  mat-icon-button
+                  (click)="cartService.increaseQuantity(item.id)"
+                  aria-label="Increase quantity"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="item-right-section">
+              <span class="item-total">{{
+                item.price * item.quantity | currency : 'USD' : 'symbol' : '1.2-2'
+              }}</span>
               <button
                 mat-icon-button
-                (click)="cartService.decreaseQuantity(item.id)"
-                aria-label="Decrease quantity"
+                color="warn"
+                (click)="cartService.removeItem(item.id)"
+                aria-label="Remove item"
               >
-                <mat-icon>remove_circle_outline</mat-icon>
-              </button>
-              <span class="quantity-display">{{ item.quantity }}</span>
-              <button
-                mat-icon-button
-                (click)="cartService.increaseQuantity(item.id)"
-                aria-label="Increase quantity"
-              >
-                <mat-icon>add_circle_outline</mat-icon>
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>
-          <div class="item-right-section">
-            <span class="item-total">{{
-              item.price * item.quantity | currency : 'USD' : 'symbol' : '1.2-2'
+
+          <div class="cart-total m-2">
+            <span class="total-label">Total:</span>
+            <span class="total-amount">{{
+              cartService.total$ | async | currency : 'USD' : 'symbol' : '1.2-2'
             }}</span>
+          </div>
 
-            <!-- ✅ Delete Button -->
+          <!-- Cart Footer (Total & Actions) -->
+          <div class="cart-footer">
+            <button mat-button color="warn" (click)="clearCart()">Clear Cart</button>
+
+            <!-- Phase 1: Show "Proceed to Payment" if secret is null/empty -->
+
             <button
-              mat-icon-button
-              color="warn"
-              (click)="cartService.removeItem(item.id)"
-              aria-label="Remove item"
+              mat-raised-button
+              color="primary"
+              (click)="initiatePayment()"
+              style="margin-left: 8px"
             >
-              <mat-icon>delete</mat-icon>
+              Checkout with Stripe
             </button>
-          </div>
-        </div>
-        <div class="cart-total m-2">
-          <span class="total-label">Total:</span>
-          <span class="total-amount">{{
-            cartService.total$ | async | currency : 'USD' : 'symbol' : '1.2-2'
-          }}</span>
-        </div>
-        <!-- Cart Footer (Total & Actions) -->
-        <div class="cart-footer">
-          <button mat-button color="warn" (click)="clearCart()">Clear Cart</button>
-          <button mat-raised-button color="primary">Checkout</button>
-        </div>
-      </ng-container>
-      <!-- 1. Get the items from the observable -->
-      <ng-container *ngIf="cartItems$ | async as items">
-        <!-- 2. Check if the array actually has items. If not, show #emptyCart -->
-        <ng-container *ngIf="items.length > 0; else emptyCart">
-          <!-- Loop through each item (This now only runs if length > 0) -->
-          <div *ngFor="let item of items" class="cart-item">
-            <!-- ... your existing item HTML ... -->
-          </div>
 
-          <!-- ... your existing total and footer HTML ... -->
+            <!-- ✅ END SAFE CHECK ✅ -->
+          </div>
         </ng-container>
       </ng-container>
+
       <!-- Empty State Template -->
       <ng-template #emptyCart>
         <div class="empty-cart-message">
@@ -84,8 +83,7 @@
     </div>
   </mat-sidenav>
 
-  <!-- RIGHT DRAWER (Cart / Settings) -->
-  <!-- Changed to mode="over" so it slides over the content -->
+  <!-- RIGHT DRAWER (Settings) -->
   <mat-sidenav #rightDrawer mode="over" position="end">
     <mat-list>
       <mat-list-item>
@@ -103,7 +101,6 @@
 
   <!-- MAIN CONTENT -->
   <mat-sidenav-content>
-    <!-- ONLY ONE router-outlet! -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

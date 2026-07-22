@@ -3,20 +3,25 @@ package com.OnlineBookStore.AuthService.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
+
+    private final GatewayTrustFilter gatewayTrustFilter;
+
+    // Inject the filter
+    public WebSecurityConfiguration(GatewayTrustFilter gatewayTrustFilter) {
+        this.gatewayTrustFilter = gatewayTrustFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,10 +40,13 @@ public class WebSecurityConfiguration {
                 .cors(cors -> cors.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/message").permitAll()
-                        .requestMatchers("/actuator/busrefresh").permitAll()
+                        // Public endpoints (Gateway will pass these without headers, filter does nothing, permitAll allows it)
+                        .requestMatchers("/login", "/signup", "/init", "/message", "/actuator/busrefresh").permitAll()
+
+                        // Protected endpoints (Gateway passes headers, Filter authenticates, this rule allows it)
+                        .requestMatchers("/save-more-details", "/profile").authenticated()
+
+                        // Swagger
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -47,10 +55,15 @@ public class WebSecurityConfiguration {
                                 "/webjars/**"
                         ).permitAll()
 
+                        // ⚠️ IMPORTANT: Change this from .permitAll() to .authenticated()
+                        // so any new endpoints you add in the future are secure by default.
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
+
+                // ⚠️ THIS IS THE MISSING LINK: Add the filter before the default auth filter
+                .addFilterBefore(gatewayTrustFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

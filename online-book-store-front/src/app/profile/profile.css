@@ -1,0 +1,77 @@
+.books-page {
+	min-height: 100vh;
+	padding: 2rem clamp(1rem, 3vw, 2rem) 3rem;
+	background:
+		radial-gradient(circle at top left, rgba(255, 214, 153, 0.45), transparent 28%),
+		linear-gradient(180deg, #fff8ef 0%, #fff 38%, #f6ead9 100%);
+}
+.profile-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.profile-card {
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.profile-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #3f51b5;
+}
+
+.profile-form {
+  margin-top: 1.5rem;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.save-button {
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.disabled-hint {
+  color: #f44336; /* Red hint to clearly show it's locked */
+  font-weight: 500;
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .half-width {
+    width: 100%;
+  }
+  .profile-card {
+    padding: 1rem;
+  }
+}

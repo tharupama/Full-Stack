@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class BookQuantityRequestDto {
-    public Long bookId;
-    public int quantity;
+    private Long id;
+    private String title;
+    private double price;
+    private int quantity;
 }

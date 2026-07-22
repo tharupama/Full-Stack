@@ -10,6 +10,7 @@ import { UserAuth } from './user-auth';
 export class User {
   BASE_URL = 'http://localhost:9191';
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
+  requestHeaderWithAuth = new HttpHeaders({ 'No-Auth': 'False' });
   constructor(private httpClient: HttpClient, private userAuthService: UserAuth) {}
 
   public login(loginData: any) {
@@ -39,5 +40,14 @@ export class User {
     }
     // }
     return false;
+  }
+  public getUserProfile(): Observable<any> {
+    const url = `${this.BASE_URL}/profile`;
+    return this.httpClient.get<any>(url, { headers: this.requestHeaderWithAuth });
+  }
+  public updateUserProfile(profileData: any): Observable<any> {
+    console.log('Updating user profile:', profileData);
+    const url = `${this.BASE_URL}/save-more-details`;
+    return this.httpClient.put<any>(url, profileData, { headers: this.requestHeaderWithAuth });
   }
 }

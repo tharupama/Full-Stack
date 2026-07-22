@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class Order {
     private String customerId;
     private String orderStatus;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<OrderItem> items = new ArrayList<>();
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -37,7 +40,4 @@ public void addItem(OrderItem item) {
         items.add(item);
         item.setOrder(this);
     }
-
-
-
 }

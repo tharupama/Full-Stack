@@ -1,17 +1,17 @@
 package com.OnlineBookService.order_service.service.impl;
 
-import com.OnlineBookService.order_service.dto.BookOrderRequestDto;
 import com.OnlineBookService.order_service.dto.BookQuantityRequestDto;
 import com.OnlineBookService.order_service.entity.Order;
 import com.OnlineBookService.order_service.entity.OrderItem;
 import com.OnlineBookService.order_service.repository.OrderRepo;
 import com.OnlineBookService.order_service.service.OrderService;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
+
+
 
 @Service
 @AllArgsConstructor
@@ -22,19 +22,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
 
 
-    public String saveOrder(BookOrderRequestDto bookOrderRequestDto) {
+    public String saveOrder(String email, List<BookQuantityRequestDto> bookQuantityRequestDto) {
         System.out.println("inside save book order service");
         Order order = new Order();
-        order.setCustomerId(bookOrderRequestDto.customerId);
+        order.setCustomerId(email);
         order.setOrderStatus("PENDING");
 
-        for(BookQuantityRequestDto bookReq:bookOrderRequestDto.getBookQuantityRequestDtoList()){
+        for(BookQuantityRequestDto bookReq:bookQuantityRequestDto){
             OrderItem orderItem = new OrderItem();
-            orderItem.setBookId(bookReq.getBookId());
+            orderItem.setBookId(bookReq.getId());
             orderItem.setQuantity(bookReq.getQuantity());
-            boolean isUpdated = bookServiceClient.deductQuantityFromInventory(bookReq.getBookId(), bookReq.getQuantity());
+            boolean isUpdated = bookServiceClient.deductQuantityFromInventory(bookReq.getId(), bookReq.getQuantity());
             if (!isUpdated) {
-                System.out.println("Failed to deduct quantity for bookId: " + bookReq.getBookId() + ". Rolling back transaction.");
+                System.out.println("Failed to deduct quantity for bookId: " + bookReq.getId() + ". Rolling back transaction.");
             }
             order.addItem(orderItem);
         }

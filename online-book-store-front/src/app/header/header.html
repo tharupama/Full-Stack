@@ -25,6 +25,7 @@
       <button
         *ngIf="isLoggedIn()"
         class="mr-4 text-3xl cursor-pointer bg-amber-50 px-2 py-1 rounded-4xl border-2 hover:bg-amber-100 transition duration-200"
+        routerLink="/profile"
       >
         <i class="bx bx-user bx-bounce"></i>
         <span class="text-lg font-bold ml-2">{{ getUsername() }}</span>

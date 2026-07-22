@@ -32,7 +32,7 @@ public class BookServiceClient {
     public boolean fallbackDeductQuantity(Long bookId, int quantity, Throwable t) {
         System.err.println("⚠️ Circuit Breaker/Retry triggered for bookId: " + bookId + "! Book Service is down. Error: " + t.getMessage());
         Notification notification = new Notification();
-        notification.setMessage("Automatic book Quantity reduction during order placement !, Admin have to deduct the quantity manually for bookId: " + bookId + " and quantity: " + quantity);
+        notification.setMessage("Automatic book Quantity reduction during order placement !, Admin have to deduct the quantity manually for bookId: " + bookId + " by quantity: " + quantity);
         notification.setStatus(Enums.NOT_PERFORMED);
         notificationRepo.save(notification);
         return false;

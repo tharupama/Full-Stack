@@ -1,7 +1,5 @@
-package com.OnlineBookStore.AuthService.entity;
+package com.OnlineBookStore.AuthService.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,13 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-public class User {
-    @Id
+public class ResponseProfileDto {
     private String email;
     private String username;
-    private String password;
-    private String role;
     private String address;
     private String mobile;
     private String postalCode;
