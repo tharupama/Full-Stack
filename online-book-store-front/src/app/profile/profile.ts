@@ -10,7 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import { User } from '../service/user';
 import { UserProfileDto } from '../../dto/UserProfileDto';
 import { ToastrService } from 'ngx-toastr';
-
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { ProfileOrdersElements } from '../../dto/ProfileOrderElements';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -22,11 +24,19 @@ import { ToastrService } from 'ngx-toastr';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
+    MatTabsModule,
+    MatTableModule,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
+  PROFILE_ORDERS: ProfileOrdersElements[] = [
+    { orderId: 1, orderStatus: 'Hydrogen', createdAt: '1.0079', updatedAt: 'H' },
+  ];
+  displayedColumns: string[] = ['orderId', 'orderStatus', 'createdAt', 'updatedAt', 'moreInfo'];
+  dataSource = this.PROFILE_ORDERS;
+
   profileForm: FormGroup;
   isLoading = false;
 

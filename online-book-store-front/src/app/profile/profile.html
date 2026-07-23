@@ -1,89 +1,135 @@
 <div class="books-page">
-  <div class="profile-container">
-    <mat-card class="profile-card">
-      <mat-card-header>
-        <mat-icon mat-card-avatar class="profile-icon">account_circle</mat-icon>
-        <mat-card-title>My Account</mat-card-title>
-        <mat-card-subtitle>View and update your profile information</mat-card-subtitle>
-      </mat-card-header>
+  <mat-tab-group>
+    <mat-tab label="My Profile">
+      <div class="profile-container">
+        <mat-card class="profile-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="profile-icon">account_circle</mat-icon>
+            <mat-card-title>My Account</mat-card-title>
+            <mat-card-subtitle>View and update your profile information</mat-card-subtitle>
+          </mat-card-header>
 
-      <mat-card-content>
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-          <!-- Email Field (DISABLED) -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email Address</mat-label>
-            <input matInput formControlName="email" type="email" />
-            <mat-icon matSuffix>email</mat-icon>
-            <mat-hint class="disabled-hint">Email cannot be changed</mat-hint>
-          </mat-form-field>
+          <mat-card-content>
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+              <!-- Email Field (DISABLED) -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email Address</mat-label>
+                <input matInput formControlName="email" type="email" />
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-hint class="disabled-hint">Email cannot be changed</mat-hint>
+              </mat-form-field>
 
-          <!-- Username Field -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Username</mat-label>
-            <input matInput formControlName="username" placeholder="Enter your username" />
-            <mat-icon matSuffix>person</mat-icon>
-            <mat-error *ngIf="f['username'].hasError('required')">Username is required</mat-error>
-            <mat-error *ngIf="f['username'].hasError('minlength')">
-              Username must be at least 3 characters
-            </mat-error>
-          </mat-form-field>
+              <!-- Username Field -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username" placeholder="Enter your username" />
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="f['username'].hasError('required')"
+                  >Username is required</mat-error
+                >
+                <mat-error *ngIf="f['username'].hasError('minlength')">
+                  Username must be at least 3 characters
+                </mat-error>
+              </mat-form-field>
 
-          <!-- Address Field -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Address</mat-label>
-            <textarea
-              matInput
-              formControlName="address"
-              placeholder="Enter your full address"
-              rows="2"
-            >
-            </textarea>
-            <mat-icon matSuffix>home</mat-icon>
-            <mat-error *ngIf="f['address'].hasError('required')">Address is required</mat-error>
-          </mat-form-field>
+              <!-- Address Field -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Address</mat-label>
+                <textarea
+                  matInput
+                  formControlName="address"
+                  placeholder="Enter your full address"
+                  rows="2"
+                >
+                </textarea>
+                <mat-icon matSuffix>home</mat-icon>
+                <mat-error *ngIf="f['address'].hasError('required')">Address is required</mat-error>
+              </mat-form-field>
 
-          <!-- Mobile and Postal Code Row -->
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="half-width">
-              <mat-label>Mobile Number</mat-label>
-              <input matInput formControlName="mobile" placeholder="+1 234 567 8900" />
-              <mat-icon matSuffix>phone_android</mat-icon>
-              <mat-error *ngIf="f['mobile'].hasError('required')"
-                >Mobile number is required</mat-error
-              >
-              <mat-error *ngIf="f['mobile'].hasError('pattern')">
-                Please enter a valid mobile number
-              </mat-error>
-            </mat-form-field>
+              <!-- Mobile and Postal Code Row -->
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Mobile Number</mat-label>
+                  <input matInput formControlName="mobile" placeholder="+1 234 567 8900" />
+                  <mat-icon matSuffix>phone_android</mat-icon>
+                  <mat-error *ngIf="f['mobile'].hasError('required')"
+                    >Mobile number is required</mat-error
+                  >
+                  <mat-error *ngIf="f['mobile'].hasError('pattern')">
+                    Please enter a valid mobile number
+                  </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" class="half-width">
-              <mat-label>Postal Code</mat-label>
-              <input matInput formControlName="postalCode" placeholder="e.g., 10001" />
-              <mat-icon matSuffix>local_post_office</mat-icon>
-              <mat-error *ngIf="f['postalCode'].hasError('required')"
-                >Postal code is required</mat-error
-              >
-              <mat-error *ngIf="f['postalCode'].hasError('pattern')">
-                Invalid postal code format
-              </mat-error>
-            </mat-form-field>
-          </div>
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Postal Code</mat-label>
+                  <input matInput formControlName="postalCode" placeholder="e.g., 10001" />
+                  <mat-icon matSuffix>local_post_office</mat-icon>
+                  <mat-error *ngIf="f['postalCode'].hasError('required')"
+                    >Postal code is required</mat-error
+                  >
+                  <mat-error *ngIf="f['postalCode'].hasError('pattern')">
+                    Invalid postal code format
+                  </mat-error>
+                </mat-form-field>
+              </div>
 
-          <!-- Save Button -->
-          <div class="button-container">
-            <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              [disabled]="isLoading || profileForm.invalid"
-              class="save-button"
-            >
-              <mat-icon>save</mat-icon>
-              {{ isLoading ? 'Saving...' : 'Save Changes' }}
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
-  </div>
+              <!-- Save Button -->
+              <div class="button-container">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="isLoading || profileForm.invalid"
+                  class="save-button"
+                >
+                  <mat-icon>save</mat-icon>
+                  {{ isLoading ? 'Saving...' : 'Save Changes' }}
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+    <mat-tab label="My Orders">
+      <table mat-table [dataSource]="dataSource" class="mat-shadow-2">
+        <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell *matHeaderCellDef>Order Id</th>
+          <td mat-cell *matCellDef="let element">{{ element.orderId }}</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="orderStatus">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">{{ element.orderStatus }}</td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Created At</th>
+          <td mat-cell *matCellDef="let element">{{ element.createdAt }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef>Updated At</th>
+          <td mat-cell *matCellDef="let element">{{ element.updatedAt }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="moreInfo">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button>More Info</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </mat-tab>
+  </mat-tab-group>
 </div>

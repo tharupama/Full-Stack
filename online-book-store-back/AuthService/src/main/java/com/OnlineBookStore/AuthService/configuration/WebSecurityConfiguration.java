@@ -41,7 +41,7 @@ public class WebSecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints (Gateway will pass these without headers, filter does nothing, permitAll allows it)
-                        .requestMatchers("/login", "/signup", "/init", "/message", "/actuator/busrefresh").permitAll()
+                        .requestMatchers("/login", "/signup", "/init", "/message", "/actuator/busrefresh","/get-user-by-email/{email}").permitAll()
 
                         // Protected endpoints (Gateway passes headers, Filter authenticates, this rule allows it)
                         .requestMatchers("/save-more-details", "/profile").authenticated()
@@ -49,7 +49,9 @@ public class WebSecurityConfiguration {
                         // Swagger
                         .requestMatchers(
                                 "/v3/api-docs/**",
-                                "/swagger-ui/**",
+                                "/swagger-ui",          // Added: exact match without slash
+                                "/swagger-ui/",         // Added: exact match with slash
+                                "/swagger-ui/**",       // Keeps: matches /swagger-ui/index.html, etc.
                                 "/swagger-ui.html",
                                 "/swagger-resources/**",
                                 "/webjars/**"

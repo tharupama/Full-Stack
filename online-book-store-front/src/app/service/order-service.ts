@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { OrderTableDto } from '../../dto/OrderTableDto';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,11 @@ export class OrderService {
 
   constructor(private httpClient: HttpClient) {}
 
-  // ✅ UPDATED: Now sends cart items and user email
+  public getOrders(pageSize: Number, pageNumber: Number): Observable<any> {
+    const url = `${this.BASE_URL}/api/v1/order-controller/get-orders?page=${pageNumber}&size=${pageSize}`;
+    return this.httpClient.get<any>(url, { headers: this.requestHeaderWithAuth });
+  }
+
   public createCheckoutSession(amount: number, cartItems: any[]): Observable<any> {
     console.log('Creating checkout session for amount (in cents):', amount);
     const url = `${this.BASE_URL}/api/v1/order-controller/create-checkout-session`;
@@ -21,9 +26,6 @@ export class OrderService {
       { headers: this.requestHeaderWithAuth }
     );
   }
-
-  // ❌ REMOVED: placeOrder() is no longer needed
-  // Orders are now created securely via Stripe webhooks in the backend
 
   public getNotifications(): Observable<any> {
     const url = `${this.BASE_URL}/api/v1/notification-controller/getNotification`;
@@ -38,5 +40,15 @@ export class OrderService {
   public deleteNotification(id: Number): Observable<any> {
     const url = `${this.BASE_URL}/api/v1/notification-controller/deleteNotification/${id}`;
     return this.httpClient.delete(url, { headers: this.requestHeaderWithAuth });
+  }
+  public getOrderAndCustomerDetails(e: OrderTableDto): Observable<any> {
+    console.log('order service getOrderAndCustomerDetails triggered');
+    const url = `${this.BASE_URL}/api/v1/order-controller/get-order-customer-details?orderId=${e.orderId}&email=${e.customerId}`;
+    return this.httpClient.get<any>(url, { headers: this.requestHeaderWithAuth });
+  }
+  public updateOrderStatus(orderId: Number, newStatus: String): Observable<any> {
+    console.log('order service updateOrderStatus triggered');
+    const url = `${this.BASE_URL}/api/v1/order-controller/updateStatus?orderId=${orderId}&status=${newStatus}`;
+    return this.httpClient.put<any>(url, null, { headers: this.requestHeaderWithAuth });
   }
 }

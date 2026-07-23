@@ -296,6 +296,50 @@
     </div>
   </mat-tab>
   <mat-tab label="Order Management">
-    <div class="books-page"></div>
+    <div class="books-page">
+      <table mat-table [dataSource]="orderDataSource" class="mat-shadow-2">
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell *matHeaderCellDef>Order Id</th>
+          <td mat-cell *matCellDef="let e">{{ e.orderId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="customerId">
+          <th mat-header-cell *matHeaderCellDef>Customer Id</th>
+          <td mat-cell *matCellDef="let e">{{ e.customerId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="orderStatus">
+          <th mat-header-cell *matHeaderCellDef>Order Status</th>
+          <td mat-cell *matCellDef="let e">{{ e.orderStatus }}</td>
+        </ng-container>
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Created At</th>
+          <td mat-cell *matCellDef="let e">{{ e.createdAt }}</td>
+        </ng-container>
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef>Updated At</th>
+          <td mat-cell *matCellDef="let e">{{ e.updatedAt }}</td>
+        </ng-container>
+        <ng-container matColumnDef="manageBtn">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-raised-button *matCellDef="let e">
+            <button mat-button (click)="manageOrder(e)">Manage</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="orderTableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: orderTableColumns"></tr>
+      </table>
+
+      <mat-paginator
+        #orderPaginator
+        [length]="totalOrders"
+        [pageSize]="orderPageSize"
+        [pageIndex]="currntOrderPage"
+        [pageSizeOptions]="[2, 5, 10, 25]"
+        (page)="onOrderPageChange($event)"
+        aria-label="Select order page"
+        style="margin-top: 1rem"
+      >
+      </mat-paginator>
+    </div>
   </mat-tab>
 </mat-tab-group>

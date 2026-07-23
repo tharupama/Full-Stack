@@ -1,6 +1,5 @@
 package com.OnlineBookService.order_service.repository;
 
-import com.OnlineBookService.order_service.entity.Order;
 import com.OnlineBookService.order_service.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -10,7 +9,8 @@ import java.util.List;
 
 @Repository
 @EnableJpaRepositories
-public interface OrderRepo extends JpaRepository<Order,Long> {
+public interface OrderItemRepo extends JpaRepository<OrderItem,Long> {
 
-   Order getOrderByOrderId(Long orderId);
+
+    List<OrderItem> findOrderItemByOrder_OrderId(Long orderOrderId);
 }

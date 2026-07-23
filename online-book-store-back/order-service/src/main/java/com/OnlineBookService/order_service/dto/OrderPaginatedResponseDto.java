@@ -1,0 +1,14 @@
+package com.OnlineBookService.order_service.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class OrderPaginatedResponseDto {
+    private long totalOrders;
+    private List<OrderResponseDto> orders;
+}

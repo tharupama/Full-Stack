@@ -7,6 +7,8 @@ import com.OnlineBookStore.AuthService.entity.User;
 import com.OnlineBookStore.AuthService.service.UserService;
 import com.OnlineBookStore.AuthService.util.StandardResponce;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,15 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<ResponseProfileDto> getUserProfile(@RequestHeader("X-User-Name") String email) {
         ResponseProfileDto user = userService.getUserProfile(email);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/get-user-by-email/{email}")
+    public ResponseEntity<ResponseProfileDto> getUserByEmail(@PathVariable String email) {
+        ResponseProfileDto user = userService.getUserByEmail(email);
         if (user != null) {
             return ResponseEntity.ok(user);
         } else {

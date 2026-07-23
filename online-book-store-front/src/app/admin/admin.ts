@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { BookDto } from '../../dto/BookDto';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, CurrencyPipe } from '@angular/common';
@@ -19,7 +19,9 @@ import { MatTableModule } from '@angular/material/table';
 import { PeriodicElement } from '../../dto/PeriodicElement';
 import { OrderService } from '../service/order-service';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { OrderTableDto } from '../../dto/OrderTableDto';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { ManageOrderDialog } from '../manage-order-dialog/manage-order-dialog';
 @Component({
   selector: 'app-admin',
   imports: [
@@ -37,16 +39,31 @@ import { MatTableDataSource } from '@angular/material/table';
     MatToolbar,
     MatTabsModule,
     MatTableModule,
+    MatPaginatorModule,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })
 export class Admin implements OnInit {
+  @ViewChild('orderPaginator') orderPaginator!: MatPaginator;
+  orderPageSize: number = 2;
+  currntOrderPage: number = 0;
+  totalOrders: number = 0;
   Notification_status: string = 'NOT_PERFORMED';
   ELEMENT_DATA: PeriodicElement[] = [];
+  ORDER_DATA: OrderTableDto[] = [];
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'update', 'delete'];
   dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
-
+  orderDataSource = new MatTableDataSource<OrderTableDto>(this.ORDER_DATA);
+  /* orderDataSource = this.ORDER_DATA; */
+  orderTableColumns: string[] = [
+    'orderId',
+    'customerId',
+    'orderStatus',
+    'createdAt',
+    'updatedAt',
+    'manageBtn',
+  ];
   searchTerm: string = '';
   bookDto: BookDto = {
     title: '',
@@ -72,8 +89,47 @@ export class Admin implements OnInit {
   ngOnInit(): void {
     this.loadBooks(this.currentPage, this.pageSize);
     this.getNotifications();
+    this.getOrders(this.orderPageSize, this.currntOrderPage);
   }
 
+  manageOrder(rowData: OrderTableDto) {
+    this.orderService.getOrderAndCustomerDetails(rowData).subscribe({
+      next: (res) => {
+        const dialogRef = this.dialog.open(ManageOrderDialog, {
+          width: '600px',
+          maxWidth: '90vw',
+          data: {
+            orderInfo: rowData,
+            details: res,
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) {
+            console.log('Save changes triggered with:', result);
+            const { orderId, newStatus } = result;
+
+            this.orderService.updateOrderStatus(orderId, newStatus).subscribe({
+              next: (updateRes) => {
+                console.log('Order status updated successfully:', updateRes);
+                this.toastr.success('Order status updated successfully!');
+
+                this.getOrders(this.orderPageSize, this.currntOrderPage);
+              },
+              error: (updateErr) => {
+                console.error('Error updating order status:', updateErr);
+                this.toastr.error('Error updating order status.');
+              },
+            });
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching order and customer details:', err);
+        this.toastr.error('Error fetching order and customer details.');
+      },
+    });
+  }
   searchBooks() {
     if (this.searchTerm.trim() === '') {
       this.loadBooks(this.currentPage, this.pageSize);
@@ -124,6 +180,36 @@ export class Admin implements OnInit {
       (error) => {
         console.error('Error adding book:', error);
         this.toastr.error('Error adding book.');
+      }
+    );
+  }
+
+  getOrders(pageSize: number, pageNumber: number) {
+    console.log('get Orders admin back load');
+    this.orderService.getOrders(pageSize, pageNumber).subscribe(
+      (res) => {
+        const orders = res.data.orders;
+        this.totalOrders = res.data.totalOrders;
+
+        this.ORDER_DATA = orders.map((o: any) => ({
+          orderId: o.orderId,
+          customerId: o.customerId,
+          orderStatus: o.orderStatus,
+          createdAt: o.createdAt,
+          updatedAt: o.updatedAt,
+        }));
+
+        this.orderDataSource.data = this.ORDER_DATA;
+
+        if (this.orderPaginator) {
+          this.orderPaginator.length = this.totalOrders;
+          this.orderPaginator.pageIndex = this.currntOrderPage;
+          this.orderPaginator.pageSize = this.orderPageSize;
+        }
+      },
+      (error) => {
+        console.error('Error fetching orders:', error);
+        this.toastr.error('Error fetching orders.');
       }
     );
   }
@@ -251,6 +337,13 @@ export class Admin implements OnInit {
     if (this.currentPage < maxPage) {
       this.loadBooks(this.currentPage + 1, this.pageSize);
     }
+  }
+
+  // This triggers whenever the user clicks next, previous, or changes page size
+  onOrderPageChange(event: PageEvent) {
+    this.currntOrderPage = event.pageIndex;
+    this.orderPageSize = event.pageSize;
+    this.getOrders(this.orderPageSize, this.currntOrderPage);
   }
   deleteBook(bookId: number) {
     Swal.fire({

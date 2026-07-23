@@ -1,6 +1,10 @@
 package com.OnlineBookService.order_service.controller;
 
 import com.OnlineBookService.order_service.dto.BookQuantityRequestDto;
+import com.OnlineBookService.order_service.dto.OrderAndCustomerDetailsDto;
+import com.OnlineBookService.order_service.dto.OrderPaginatedResponseDto;
+import com.OnlineBookService.order_service.dto.OrderResponseDto;
+import com.OnlineBookService.order_service.entity.Order;
 import com.OnlineBookService.order_service.service.OrderService;
 import com.OnlineBookService.order_service.utill.StandardResponse;
 import com.stripe.Stripe;
@@ -8,6 +12,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/v1/order-controller") // ✅ Added leading slash
-
 public class OrderController {
 
     private final OrderService orderService;
@@ -34,18 +38,20 @@ public class OrderController {
     // ✅ Helper class to hold pending order data
     private record PendingOrder(String userEmail, List<BookQuantityRequestDto> cartItems) {}
 
-    // ⚠️ TEMPORARY: In production, use Redis or a database table
+
     private static final Map<String, PendingOrder> pendingOrders = new ConcurrentHashMap<>();
 
-    // ✅ Proper Constructor Injection
+
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
+
+
     @PostConstruct
     public void init() {
         Stripe.apiKey = this.stripeSecretKey;
-        System.out.println("✅ Stripe API Key initialized successfully.");
+        System.out.println("Stripe API Key initialized successfully.");
     }
 
 //    @PostMapping("/save")
@@ -71,16 +77,27 @@ public class OrderController {
         return ResponseEntity.ok(new StandardResponse(200, "Success", result));
     }
 
+    @GetMapping(value="/get-orders",params = {"page","size"})
+    public ResponseEntity<StandardResponse> getOrders(@RequestParam int page, @RequestParam int size) {
+        OrderPaginatedResponseDto orders = orderService.getAllOrders(page, size);
+        return ResponseEntity.ok(new StandardResponse(200, "Success", orders));
+    }
+    @GetMapping(value="/get-order-customer-details", params = {"orderId","email"})
+    public OrderAndCustomerDetailsDto getOrderAndCustomerDetailsDto(@RequestParam Long orderId, @RequestParam String email){
+        System.out.println("/get-order-customer-details triggerd");
+        return orderService.getOrderAndCustomerDetailsDto(orderId,email);
+    }
+
     @PostMapping("/create-checkout-session")
     public ResponseEntity<?> createCheckoutSession(
-            @RequestHeader("X-User-Name") String userEmail, // ✅ Get email securely from API Gateway header
+            @RequestHeader("X-User-Name") String userEmail,
             @RequestBody Map<String, Object> data) {
         try {
-            // ✅ DEBUG LOG 1: Prove the request reached the backend with the correct user
-            System.out.println("📥 BACKEND: Received checkout request for user: " + userEmail);
+
+            System.out.println(" BACKEND: Received checkout request for user: " + userEmail);
 
             long amount = ((Number) data.get("amount")).longValue();
-            // ❌ REMOVED: String userEmail = (String) data.get("userEmail");
+
 
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> rawCartItems = (List<Map<String, Object>>) data.get("cartItems");
@@ -88,9 +105,9 @@ public class OrderController {
             List<BookQuantityRequestDto> cartItems = rawCartItems.stream()
                     .map(item -> {
                         BookQuantityRequestDto dto = new BookQuantityRequestDto();
-                        dto.setId(Long.valueOf(item.get("id").toString()));
-                        dto.setTitle((String) item.get("title"));
-                        dto.setPrice(((Number) item.get("price")).doubleValue());
+                        dto.setBookId(Long.valueOf(item.get("id").toString()));
+//                        dto.setTitle((String) item.get("title"));
+//                        dto.setPrice(((Number) item.get("price")).doubleValue());
                         dto.setQuantity(((Number) item.get("quantity")).intValue());
                         return dto;
                     })

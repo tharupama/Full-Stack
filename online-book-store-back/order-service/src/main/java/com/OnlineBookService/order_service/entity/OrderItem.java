@@ -1,5 +1,6 @@
 package com.OnlineBookService.order_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class OrderItem {
 
     private Long bookId;
     private Integer quantity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId",nullable = false)
     private Order order;

@@ -77,4 +77,16 @@ public class UserService {
             user.getPostalCode()
         );
     }
+
+    public ResponseProfileDto getUserByEmail(String email) {
+        User user = userRepo.findById(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return new ResponseProfileDto(
+            user.getEmail(),
+            user.getUsername(),
+            user.getAddress(),
+            user.getMobile(),
+            user.getPostalCode()
+        );
+    }
 }
